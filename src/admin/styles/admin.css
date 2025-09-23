@@ -1,0 +1,360 @@
+/* 전체 틀 */
+.admin-board{
+  width: 100%;
+  min-height: 937px;
+  display: flex;
+  background: #000;
+}
+.admin-left{
+  width: 200px;
+}
+.admin-logobox{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #fff;
+}
+.admin-logo{
+  display: block;
+  width: 140px;
+  height: 60px;
+  background-image: url('../../assets/img/logo.png');
+  text-indent: -9999px;
+}
+.amdin-logobox h3{
+  font-family: monospace;
+  margin-top: 5px;
+}
+.admin-menu{
+  margin-top: 20px;
+}
+.admin-menu li.on{
+  background: #c35930;
+  color: #fff;
+}
+.admin-menu li.on a:hover{
+  background: #c35930;
+  color: #fff;
+}
+
+.admin-menu a{
+  display: block;
+  padding: 20px;
+  color: #fff;
+}
+.admin-menu a:hover{
+  color: #c35930;
+  font-weight: bold;
+}
+
+.admin-right{
+  width: calc(100% - 200px);
+  min-width: 1500px;
+  padding: 30px 20px;
+  background: #000;
+  border-left: 1px solid #fff;
+}
+.admin-header{
+  position: relative;
+}
+.admin-header button{
+  width: 100px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.admin-header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+p{
+  margin-top: 10px;
+}
+
+/* 전체 현황 관리 */
+
+.cafe-dashboard{
+  margin-top: 30px;
+  display: flex;
+  gap: 14px;
+}
+.dashboard{
+  position: relative;
+  width: 100%;
+  border: 1px solid #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+.dashboard i{
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+.dashboard .num {
+  margin-top: 40px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.dashboard p{
+  margin-top: 10px;
+  font-size: 12px;
+  font-family: monospace;
+}
+.dashboard p span.plus{
+  color: #0d7a37;
+}
+.dashboard p span.zero{
+  color: #fff;
+}
+.dashboard p span.minus{
+  color: rgb(158, 15, 15);
+}
+.dashboard_list{
+  margin-top: 25px;
+  display: flex;
+  gap: 20px;
+}
+.item_list{
+  position: relative;
+}
+.the_best_drink{
+  width: 60%;
+  border: 1px solid #fff;
+  padding: 25px;
+  border-radius: 5px;
+}
+.shortage_stock{
+  width: 40%;
+  border: 1px solid #fff;
+  padding: 25px;
+  border-radius: 5px;
+}
+.drink_list,
+.stock_list{
+  margin-top: 30px;
+}
+.drink_list li{
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.drink_list li span{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background: #ddd;
+  border-radius: 50%;
+  font-size: 12px;
+  color: #333;
+  position: absolute;
+}
+.list_bar{
+  width: 100%;
+  margin-left: 40px;
+}
+.list_bar p{
+  margin-top: 0;
+}
+.list_bar p span{
+  width: auto;
+  height: auto;
+  background: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 14px;
+  color: #fff;
+}
+.drink_list input{
+  width: 100%;
+  margin: 2px 0;
+}
+.stock_list li{
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-list{
+  position: absolute;
+  right: 0;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: monospace;
+}
+.urgent{
+  background: #d4183d;
+}
+.tribe{
+  background: #ddd;
+  color: #333;
+}
+
+.stock_list p{
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.admin-service {
+  margin-top: 20px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+
+
+
+/* 메뉴 관리 */
+.admin-menu-list {
+  width: auto;
+  padding: 0;
+  margin-top: 30px;
+}
+.admin-title{
+  position: relative;
+}
+.admin-title h3{
+  font-size: 24px;
+}
+
+.admin-title button{
+  width: auto;
+  position: absolute;
+  right: 0;
+  top:0;
+  padding: 5px 10px;
+}
+
+.admin-coffee-product{
+  min-width: 1160px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.menu-btn{
+  display: flex;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+
+.toggle-buttons button {
+  margin: 5px;
+  padding: 6px 12px;
+  background: #dbdbdb;
+  border: 1px solid #ccc;
+  color: #adadad;
+  cursor: pointer;
+}
+
+.toggle-buttons button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* 바리스타 용품 관리 */
+
+
+
+/* 판매 현황 */
+
+
+
+/*  회원관리 */
+.member-default{
+  display: block;
+}
+.member-default table{
+  width: 100%;
+  table-layout: fixed;
+  border: 1px solid #fff;
+}
+.member-default table th,
+.member-default table td{
+  border: 1px solid #fff;
+  vertical-align: middle;
+  text-align: center;
+  padding: 10px 0;
+}
+.member-default table td:last-child button{
+  width: auto;
+  height: auto;
+  display: inline-block;
+  font-size: 12px;
+}
+
+
+
+/* 직원관리 */
+
+.manager{
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 25px;
+  font-size: 14px;
+}
+.manager-user{
+  display: flex;
+  align-items: center;
+}
+.manager-user img{
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #ddd;
+}
+.manager-name{
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.manager-name p{
+  margin-bottom: 10px;
+}
+.manager-name p:first-child{
+  margin: 0;
+}
+
+.manager-name span{
+  width: 53px;
+  background: #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #333;
+}
+.manager-list{
+  margin: 20px 0;
+}
+.manager-list li{
+  margin-bottom: 10px;
+}
+
+.btn {
+  display: flex;
+  gap: 10px;
+}
+.manager .btn{
+  width: 200px;
+}
+
+
+
+
+@media screen and (max-width: 1000px) {
+  h2{
+    font-size: 2rem;
+  }
+}

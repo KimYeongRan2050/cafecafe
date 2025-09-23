@@ -1,0 +1,130 @@
+/* 장바구니 팝업 */
+.cart-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cart-popup {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  min-width: 350px;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.cart-popup-content {
+  min-width: 350px;
+  max-width: 90vw;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+}
+.cart-popup-content h3 {
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+  color: #c35930;
+}
+.cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+.cart-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+.cart-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+.cart-name {
+  font-weight: bold;
+  margin-right: 8px;
+}
+.cart-qty, .cart-price {
+  margin-right: 8px;
+  color: #555;
+}
+.cart-remove {
+  background: #c35930;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.cart-total {
+  text-align: right;
+  font-size: 1.1rem;
+  margin-top: 12px;
+}
+.empty {
+  color: #aaa;
+  text-align: center;
+  margin: 24px 0;
+}
+
+/* 로그인 팝업 */
+.login-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-popup {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  min-width: 350px;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.login-popup h3 {
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+  color: #c35930;
+}
+.login-popup input{
+  display: flex;
+  width: 100%;
+  font-size: 18px;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+.login-popup input:last-child{
+  margin-bottom: 20px;
+}
+.login-popup button{
+  margin-top: 10px;
+}
+
+.login-popup .close-btn{
+  margin-top: 50px;
+}
