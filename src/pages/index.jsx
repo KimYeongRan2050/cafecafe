@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { getProducts, getBaristaProducts } from '../services/productService';
 
-function Idx({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }) {
+function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }) {
   const [products, setProducts] = useState([]);
 
   // 로딩/에러 상태 추가
@@ -139,4 +138,4 @@ function Idx({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }) 
   );
 }
 
-export default Idx;
+export default Index;

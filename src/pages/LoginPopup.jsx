@@ -6,6 +6,7 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (typeof onLogin === "function") {
       const result = await onLogin(id, pw);
       if (result) {
@@ -15,14 +16,6 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
       } else {
         alert("로그인 실패");
       }
-    }
-  };
-
-
-
-  const handleOverlayClick = (e) => {
-    if (e.target.classList.contains("popup-overlay")) {
-      onClose();
     }
   };
 

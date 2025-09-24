@@ -13,7 +13,7 @@ function LogoutButton(props) {
   );
 }
 
-function Idx() {
+function Index() {
   const [count, setCount] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   
@@ -512,4 +512,4 @@ function Idx() {
   )
 }
 
-export default Idx
+export default Index;

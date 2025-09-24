@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Idx from './pages/index.jsx';
+import Index from './pages/index.jsx';
 import MainRoutes from './routes/MainRoutes';
 import AdminRoutes from './admin/routes/AdminRoutes.jsx';
 import Header from './components/Header.jsx';
@@ -94,7 +94,7 @@ function App() {
       )}
 
       <Routes>
-        <Route path="/" element={<Idx cart={cart} setCart={setCart} />} />
+        <Route path="/" element={<Index cart={cart} setCart={setCart} />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/*" element={<MainRoutes onLogin={handleLogin} />} />
       </Routes>

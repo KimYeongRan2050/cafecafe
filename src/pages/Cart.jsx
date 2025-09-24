@@ -78,7 +78,7 @@ function Cart({ cart, setCart }) {
                 <div className="cart-info">
                   <span className="cart-name">{item.name}</span>
                   <button className="cart-remove" onClick={() => removeItem(index)}>
-                    <i class="bi bi-trash"></i>삭제
+                    <i className="bi bi-trash"></i>삭제
                   </button>
                 </div>
                 <div className="cart-info">

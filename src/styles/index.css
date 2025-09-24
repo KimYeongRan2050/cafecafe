@@ -68,6 +68,15 @@ i{
   margin-right: 10px;
 }
 
+input {
+  color: #333;
+}
+
+img{
+  width: 100%;
+}
+
+
 /*
 css 추가
 */
@@ -252,6 +261,8 @@ nav{
   padding: 10px;
   height: 100px;
   justify-content: space-between;
+  position: relative;
+  top: -232px;
 }
 
 .main_txt{
@@ -278,20 +289,6 @@ nav{
   margin: 40px 0 20px;
   font-size: 24px;
   font-weight: bold;
-}
-
-.black{
-  /* background-image: url('../assets/img/coffee-block.png'); */
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
-
-.latte{
-  /* background-image: url('../assets/img/latte.png'); */
-}
-
-.beans{
-  /* background-image: url('../assets/img/bean.png'); */
 }
 
 /* 별점 표시 */
@@ -342,7 +339,7 @@ nav{
 /* 매장소개 */
 .story{
   width: 100%;
-  height: 500px;
+  height: 300px;
   background: #f9fafb;
   margin: 100px 100px 0;
   display: flex;
@@ -353,9 +350,8 @@ nav{
   color: #000;
 }
 
-
 /*  */
-.overlay {
+/* .overlay {
   height: 0%;
   width: 100%;
   position: fixed;
@@ -394,7 +390,7 @@ nav{
   top: 20px;
   right: 45px;
   font-size: 60px;
-}
+} */
 
 /****** 모바일에 구현된 메뉴 ******/
   .mobile_menu{
@@ -565,6 +561,7 @@ nav{
     width: auto;
     margin-top: 0;
     padding: 4px 8px;
+    background: #ff2222;
   }
 
   .cart-total{
@@ -576,10 +573,6 @@ nav{
     border-top: 3px double #333;
   }
 
-
-  .main_position{
-
-  }
   .product-image {
     width: 100%;
     height: auto;
@@ -588,21 +581,15 @@ nav{
     border-top-right-radius: 18px;
   }
 
-  .main_img{
-    position: relative;
-    top: -101px;
-    z-index: -1;
-  }
-
-
-
+  
 
   /* 하단 */
   .footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    width: 100%;
+    height: 50px;
   }
 
 

@@ -1,24 +1,36 @@
 import React, { useState } from 'react';
-import { uploadImage } from '../services/storageService';
+import {uploadProductImage, saveProductImagePath, getProductImageUrl, } from '../services/productImage';
 
-function ImageUploader() {
-  const [imageUrl, setImageUrl] = useState(null);
+function ImageUploader({ productId, onImageSaved }) {
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file || !productId) {
+      alert("제품 등록 후 이미지를 업로드할 수 있습니다.");
+      return;
+    }
 
-    const url = await uploadImage(file);
-    setImageUrl(url);
+    setUploading(true);
+
+    const fileName = await uploadProductImage(file, productId);
+    if (fileName) {
+      await saveProductImagePath(productId, fileName);
+      setImageUrl(getProductImageUrl(fileName));
+      if (onImageSaved) onImageSaved(fileName);
+    }
+
+    setUploading(false);
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
+    <div className="image-uploader">
+      <input type="file" accept="image/*" onChange={handleFileChange} />
+      {uploading && <p>업로드 중...</p>}
       {imageUrl && (
-        <div>
-          <p>업로드 성공!</p>
-          <img src={imageUrl} alt="Uploaded" width="300" />
+        <div className="preview">
+          <img src={imageUrl} alt="미리보기" style={{ width: '120px', marginTop: '10px' }} />
         </div>
       )}
     </div>

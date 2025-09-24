@@ -240,6 +240,10 @@ p{
   grid-template-columns: repeat(4, 1fr);
 }
 
+.main_img{
+  height: 232px;
+}
+
 .menu-btn{
   display: flex;
   gap: 10px;

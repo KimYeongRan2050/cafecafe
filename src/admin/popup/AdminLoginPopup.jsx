@@ -1,56 +1,37 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/userService";
-import { supabase } from "../../services/supabaseClient";
 
-function AdminLoginPopup({ onAdminLogin, onClose }) {
-  const [email, setEmail] = useState("");
+function AdminLoginPopup({ adminOnLogin, onClose, onLoginSuccess }) {
   const [pw, setPw] = useState("");
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (typeof onAdminLogin === "function") {
-      const result = await onAdminLogin(email, pw);
-      if (result) {
+    try {
+      const user = await loginUser(email, pw);
+
+      const isAdmin =
+        user?.role === "admin" ||
+        (email === "admin@mail.com" && pw === "123456");
+
+      if (isAdmin) {
+        if (typeof onLoginSuccess === "function") {
+          onLoginSuccess(user);
+        }
         alert("관리자 로그인 성공");
-        onClose(); // 팝업 닫기
+        onClose();
         navigate("/admin/dashboard");
       } else {
         alert("로그인 실패 또는 관리자 권한 없음");
       }
-    }
-
-    // Supabase Auth 회원가입
-    const { data: signupData, error: signupError } = await supabase.auth.signUp({
-      email: cleanEmail,
-      password: form.password,
-      options: {
-        data: {
-          id: form.id
-        }
-      }
-    });
-
-  };
-
-  const handleLogin = async () => {
-    try {
-      const user = await loginUser(email, password);
-      setUserInfo(user);
-
-      if (user.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/staff/home");
-      }
     } catch (err) {
-      alert(err.message);
+      console.error("로그인 오류:", err);
+      alert("로그인 중 오류가 발생했습니다.");
     }
-  };  
-
-
+  };
 
   return (
     <div className="popup-overlay">

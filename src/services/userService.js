@@ -23,7 +23,7 @@ export async function addUser(name) {
 }
 
 // 직원 수정
-export async function updateUser(id, updates) {
+export async function updateUser(id,  updates) {
   const { data, error } = await supabase
     .from('member')
     .update(updates)
@@ -48,6 +48,16 @@ export async function removeUser(id) {
 
 
 export async function loginUser(email, password) {
+  // 임시 관리자 계정 허용
+  if (email === "admin@mail.com" && password === "123456") {
+    return {
+      id: "temp-admin",
+      name: "관리자",
+      role: "admin",
+      email
+    };
+  }
+
   // 1. Supabase Auth 인증
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
     email,
@@ -62,7 +72,7 @@ export async function loginUser(email, password) {
   const { data: memberData, error: memberError } = await supabase
     .from("member")
     .select("name, role, is_verified")
-    .eq("id", authData.user.id)
+    .eq("user_id", authData.user.id)
     .single();
 
   if (memberError || !memberData || !memberData.is_verified) {
@@ -70,7 +80,7 @@ export async function loginUser(email, password) {
   }
 
   return {
-    id: authData.user.id,
+    id: userId,
     name: memberData.name,
     role: memberData.role,
     email: authData.user.email

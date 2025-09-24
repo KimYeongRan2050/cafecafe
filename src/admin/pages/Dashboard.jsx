@@ -23,25 +23,25 @@ function Dashboard() {
         <div className="cafe-dashboard">
           <div className="dashboard box one">
             <h4>오늘 매출</h4>
-            <i class="bi bi-graph-up-arrow"></i>
+            <i className="bi bi-graph-up-arrow"></i>
             <div className='num price'>￦4,500</div>
             <p><span className="plus">+12%</span> 전일 대비</p>
           </div>
           <div className="dashboard box two">
             <h4>총 주문</h4>
-            <i class="bi bi-cart"></i>
+            <i className="bi bi-cart"></i>
             <div className='num'>47</div>
             <p><span className="plus">+3%</span> 전일 대비</p>
           </div>
           <div className="dashboard box three">
             <h4>재직 직원</h4>
-            <i class="bi bi-person"></i>
+            <i className="bi bi-person"></i>
             <div className='num'>8</div>
             <p><span className="zero">0</span> 전일 대비</p>
           </div>
           <div className="dashboard box fore">
             <h4>재고 부족</h4>
-            <i class="bi bi-box"></i>
+            <i className="bi bi-box"></i>
             <div className='num'>3</div>
             <p><span className="minus">-2%</span> 전일 대비</p>
           </div>

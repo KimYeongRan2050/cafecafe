@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Cart from "../pages/Cart"; // Assuming Cart is a component in the same directory
 import LoginPopup from "../pages/LoginPopup";
 import Signup from "../pages/Signup";
@@ -12,6 +12,7 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showSignupPopup, setShowSignupPopup] = useState(false);
   const [showAdminLoginPopup, setShowAdminLoginPopup] = useState(false);
+  const menuRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -20,18 +21,17 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
     setIsMenuOpen(prev => !prev);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   const handleLoginClick = () => {
     setShowLoginPopup(true);
     closeMenu();
   };
 
-
   const handleSignup = (FormData) => {
     setShowSignupPopup(false);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -43,6 +43,21 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
     }
   };
 
+  // 메뉴 외부 클릭 시 닫기
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside); // 이벤트 타입 수정
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside); // 정리도 동일하게
+  };
+}, [isMenuOpen]);
+
   const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return(
@@ -53,14 +68,14 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
         </div>
 
         <nav>
-          <div><a href="">상품</a></div>
-          <div><a href="">카페소개</a></div>
-          <div><a href="">주문방법</a></div>
-          <div><a href="">문의</a></div>
+          <div><Link to="">상품</Link></div>
+          <div><Link to="">카페소개</Link></div>
+          <div><Link to="">주문방법</Link></div>
+          <div><Link to="">문의</Link></div>
         </nav>
 
         <div className='top_user'>
-          <div className="order"><a href="">주문문의</a></div>
+          <div className="order"><Link to="">주문문의</Link></div>
           <div className="signup_name">
             {userInfo ? (
               <>
@@ -114,12 +129,12 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
       {/* 모바일 메뉴 */}
       <div className="mobile_menu">
         {/* 메뉴리스트 */}
-        <div className={`mobile_menu_list ${isMenuOpen ? "open" : "close"}`}>
+        <div className={`mobile_menu_list ${isMenuOpen ? "open" : "close"}`} ref={menuRef}>
           <div className="mobile_menu_product" id="menuLinks">
-            <div><a href="" onClick={closeMenu}>상품</a></div>
-            <div><a href="" onClick={closeMenu}>카페소개</a></div>
-            <div><a href="" onClick={closeMenu}>주문방법</a></div>
-            <div><a href="" onClick={closeMenu}>문의</a></div>
+            <div><Link to="" onClick={closeMenu}>상품</Link></div>
+            <div><Link to="" onClick={closeMenu}>카페소개</Link></div>
+            <div><Link to="" onClick={closeMenu}>주문방법</Link></div>
+            <div><Link to="" onClick={closeMenu}>문의</Link></div>
           </div>
 
           <div className="mobile_user">

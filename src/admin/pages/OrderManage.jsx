@@ -62,7 +62,7 @@ function OrderManage() {
             <h3>바리스타 용품</h3>
             <p>카페 메뉴를 추가, 편집, 삭제할 수 있습니다.</p>
             <button onClick={handleAddClick}>
-              <i class="bi bi-bag-plus"></i>바리스타 용품 추가
+              <i className="bi bi-bag-plus"></i>바리스타 용품 추가
             </button>
           </div>
 

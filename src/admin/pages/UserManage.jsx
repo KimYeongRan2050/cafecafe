@@ -57,7 +57,7 @@ function UserManage() {
             <h3>직원 관리</h3>
             <p>직원 정보를 추가, 편집, 삭제할 수 있습니다.</p>
             <button onClick={() => setShowAddPopup(true)}>
-              <i class="bi bi-bag-plus"></i>직원 추가
+              <i className="bi bi-bag-plus"></i>직원 추가
             </button>
           </div>
 
@@ -76,10 +76,10 @@ function UserManage() {
 
                 <div className="manager-list">
                   <ul>
-                    <li><i class="bi bi-envelope"></i>{user.email}</li>
-                    <li><i class="bi bi-phone"></i>{user.phone}</li>
+                    <li><i className="bi bi-envelope"></i>{user.email}</li>
+                    <li><i className="bi bi-phone"></i>{user.phone}</li>
                     <li><i className="bi bi-calendar"></i>입사일 : {formatToKST(user.employment_date)}</li>
-                    <li><i class="bi bi-coin"></i>시급 : ₩{user.salary}</li>
+                    <li><i className="bi bi-coin"></i>시급 : ₩{user.salary}</li>
                   </ul>
                 </div>
 
