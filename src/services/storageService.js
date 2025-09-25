@@ -1,4 +1,4 @@
-import { supabase } from '../services/supabaseClient';
+import { supabase } from './supabaseClient';
 
 export async function uploadImage(file) {
   const { data, error } = await supabase.storage

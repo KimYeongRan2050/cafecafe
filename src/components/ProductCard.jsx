@@ -32,45 +32,41 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
         />
       </div>
 
-      <div className="main_position">
+      <div className={product.imageClass || "coffee"}>
 
-        <div className={product.imageClass || "coffee"}>
-
-          <ul className="product_icon">
-            {tags.map((tag) => (
-              <li key={`${product.id}-${tag}`} className={tag.toLowerCase()}>
-                {tag}
-              </li>
-            ))}
-          </ul>
-
-          <ul className="product_icon">
-            <li className={`stock ${product.stock < 10 ? 'out' : ''}`}>
-              {product.stock ?? 0}
+        <ul className="product_icon">
+          {tags.map((tag) => (
+            <li key={`${product.id}-${tag}`} className={tag.toLowerCase()}>
+              {tag}
             </li>
-          </ul>
+          ))}
+        </ul>
+
+        <ul className="product_icon">
+          <li className={`stock ${product.stock < 10 ? 'out' : ''}`}>
+            {product.stock ?? 0}
+          </li>
+        </ul>
+      </div>
+    
+      <div className="main_txt">
+        <div className="star">
+          {[...Array(5)].map((_, i) => (
+            <span
+              key={i}
+              className={`fa fa-star ${i < (product.stars || 0) ? 'checked' : ''}`}
+            ></span>
+          ))}
         </div>
-      
-        <div className="main_txt">
-          <div className="star">
-            {[...Array(5)].map((_, i) => (
-              <span
-                key={i}
-                className={`fa fa-star ${i < (product.stars || 0) ? 'checked' : ''}`}
-              ></span>
-            ))}
-          </div>
-          <h4>{product.name || "상품명 없음"}</h4>
-          <p>{product.description || "설명이 없습니다."}</p>
-          <div className="price">
-            ￦{product.price ? product.price.toLocaleString() : "0"}
-          </div>
-          <div className="btn">
-            <button onClick={() => onAddToCart(product)}>장바구니</button>
-            <button onClick={() => onCancel(product)}>취소</button>
-          </div>
+        <h4>{product.name || "상품명 없음"}</h4>
+        <p>{product.description || "설명이 없습니다."}</p>
+        <div className="price">
+          ￦{product.price ? product.price.toLocaleString() : "0"}
         </div>
-        
+        <div className="btn">
+          <button onClick={() => onAddToCart(product)}>장바구니</button>
+          <button onClick={() => onCancel(product)}>취소</button>
+        </div>
       </div>
     </div>
   );

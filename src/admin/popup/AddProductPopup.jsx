@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { addProduct, updateProduct, addBaristaProduct, updateBaristaProduct } from "../../services/productService";
+import { 
+  addProduct, 
+  updateProduct, 
+  addBaristaProduct, 
+  updateBaristaProduct } from "../../services/productService";
+import ImageUploader from '../../components/ImageUploader';
 
 function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
+  const [productId, setProductId] = useState(isEdit && product ? product.id : null);
   const [form, setForm] = useState({
     name:"",
     price:"",
     stock:"",
     description:"",
-    tags: "",
     imageclass:"coffee",
     is_best: false,
     is_sale: false,
-    is_new: false
+    is_new: false,
+    image: "",
   });
 
   useEffect(() => {
@@ -40,14 +46,15 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
         price: product.price || "",
         stock: product.stock || "",
         description: product.description || "",
-        tags: Array.isArray(product.tags) ? product.tags.join(", ") : product.tags || "",
-        imageclass: categoryValue,
+        imageclass: product.imageclass || "more",
         is_best: product.is_best || false,
         is_sale: product.is_sale || false,
-        is_new: product.is_new || false
+        is_new: product.is_new || false,
+        image: product.image || "",
       });
-    }
-  }, [isEdit, product]);
+
+  }}, [isEdit, product]);
+
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -58,6 +65,11 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
     setForm(prev => ({...prev, [field]: !prev[field] }));
   };
 
+  // 오류 해결: 이미지 저장 핸들러 정의
+  const handleImageSaved = (fileName) => {
+    setForm((prev) => ({ ...prev, image: fileName }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -66,35 +78,29 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
       : [];
 
     const productData = {
-      name: form.name,
+      ...form,
       price: parseInt(form.price, 10),
       stock: parseInt(form.stock, 10),
-      description: form.description,
-      imageclass: form.imageclass?.trim(),
-      is_best: form.is_best,
-      is_sale: form.is_sale,
-      is_new: form.is_new,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
 
     try {
-      //여기에 분기 조건 삽입
+      let savedProduct;
       if (form.imageclass === "coffee" || form.imageclass === "latte") {
-        if (isEdit) {
-          await updateProduct(product.id, productData);
-        } else {
-          const savedProduct = await addProduct(productData);
-          await onSaved(savedProduct); // 새 상품 전달
-        }
+        savedProduct = isEdit
+          ? await updateProduct(product.id, productData)
+          : await addProduct(productData);
       } else {
-        if (isEdit) {
-          await updateBaristaProduct(product.id, productData);
-        } else {
-          const savedProduct = await addBaristaProduct(productData);
-          await onSaved(savedProduct); // 새 상품 전달
-        }
+        savedProduct = isEdit
+          ? await updateBaristaProduct(product.id, productData)
+          : await addBaristaProduct(productData);
       }
 
+      if (!isEdit && savedProduct?.id) {
+        setProductId(savedProduct.id);
+      }
+
+      onSaved();
       onClose();
     } catch (error) {
       console.error("저장 오류:", error);
@@ -121,7 +127,7 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
   return(
     <div className="popup-overlay">
       <div className="popup-content">
-        <h3>메뉴 추가</h3>
+        <h3>{isEdit ? "메뉴 수정" : "메뉴 추가"}</h3>
         <form onSubmit={handleSubmit}>
           {/* imageclass 선택 */}
           <label>카테고리</label>
@@ -132,7 +138,7 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
             <option value="barista">바리스타 용품</option>
             <option value="more">기타 메뉴</option>
           </select>
-                    
+
           <input name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
           <input name="price" placeholder="가격" value={form.price} onChange={handleChange} required />
           <input name="stock" placeholder="재고" value={form.stock} onChange={handleChange} required />
@@ -167,7 +173,18 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
 
           </div>
 
+          {productId ? (
+            <ImageUploader
+              productId={productId}
+              onImageSaved={handleImageSaved}
+              initialImage={form.image}
+            />
+          ) : (
+            <p style={{ color: "gray" }}>제품 등록 후 이미지를 업로드할 수 있습니다.</p>
+          )}
+
           <button type="submit">{isEdit ? "수정" : "추가"}</button>
+          
         </form>
         <button onClick={onClose}>닫기</button>
       </div>

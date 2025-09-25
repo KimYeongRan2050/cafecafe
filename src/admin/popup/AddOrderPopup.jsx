@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { addBaristaProduct , updateBaristaProduct, addProduct, updateProduct} from "../../services/productService";
+import { 
+  addBaristaProduct , 
+  updateBaristaProduct, 
+  addProduct, 
+  updateProduct
+} from "../../services/productService";
+import ImageUploader from '../../components/ImageUploader';
 
 function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
+  const [productId, setProductId] = useState(isEdit && product ? product.id : null);
   const [form, setForm] = useState({
     name:"",
     price:"",
     stock:"",
     description:"",
-    tags: "",
     imageclass:"",
     is_best: false,
     is_sale: false,
-    is_new: false
+    is_new: false,
+    image: "",
   });
 
   useEffect(() => {
@@ -40,8 +47,7 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
         price: product.price || "",
         stock: product.stock || "",
         description: product.description || "",
-        tags: Array.isArray(product.tags) ? product.tags.join(", ") : product.tags || "",
-        imageclass: categoryValue,
+        imageclass: product.imageclass || "more",
         is_best: product.is_best || false,
         is_sale: product.is_sale || false,
         is_new: product.is_new || false
@@ -66,14 +72,10 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
       : [];
 
     const productData = {
-      name: form.name,
+      ...form,
       price: parseInt(form.price, 10),
       stock: parseInt(form.stock, 10),
-      description: form.description,
-      imageclass: form.imageclass,
-      is_best: form.is_best,
-      is_sale: form.is_sale,
-      is_new: form.is_new
+      created_at: new Date().toISOString(),
     };
 
     try {
@@ -101,6 +103,10 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
       alert("저장 중 오류 발생: " + error.message);
     }
   };
+
+  const handleImageSaved = (fileName) => {
+    setForm((prev) => ({ ...prev, image: fileName }));
+  };  
 
   useEffect(() => {
     // 팝업 열릴 때 스크롤 막기
@@ -162,8 +168,17 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
             >
               NEW {form.is_new ? "" : ""}
             </button>
-
           </div>
+
+          {productId ? (
+            <ImageUploader
+              productId={productId}
+              onImageSaved={handleImageSaved}
+              initialImage={form.image}
+            />
+          ) : (
+            <p style={{ color: "gray" }}>제품 등록 후 이미지를 업로드할 수 있습니다.</p>
+          )}
 
           <button type="submit">{isEdit ? "수정" : "추가"}</button>
         </form>

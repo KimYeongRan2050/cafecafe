@@ -58,7 +58,6 @@ export default function ProductForm() {
       <input name="name" placeholder="상품명" onChange={handleChange} />
       <input name="description" placeholder="설명" onChange={handleChange} />
       <input name="price" type="number" placeholder="가격" onChange={handleChange} />
-      <input name="tags" placeholder="태그 (쉼표로 구분)" onChange={handleChange} />
       <input type="file" accept="image/*" onChange={handleFileChange} />
       <button type="submit">상품 등록</button>
     </form>

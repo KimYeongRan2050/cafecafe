@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import {uploadProductImage, saveProductImagePath, getProductImageUrl, } from '../services/productImage';
+import {
+  uploadProductImage, 
+  saveProductImagePath, 
+  getProductImageUrl, 
+} from '../services/productImage';
 
-function ImageUploader({ productId, onImageSaved }) {
-  const [imageUrl, setImageUrl] = useState('');
+function ImageUploader({ productId, onImageSaved, initialImage }) {
+  const [imageUrl, setImageUrl] = useState(initialImage ? getProductImageUrl(initialImage) : '');
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = async (e) => {
@@ -26,13 +30,19 @@ function ImageUploader({ productId, onImageSaved }) {
 
   return (
     <div className="image-uploader">
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={!productId}
+      />
       {uploading && <p>업로드 중...</p>}
       {imageUrl && (
         <div className="preview">
-          <img src={imageUrl} alt="미리보기" style={{ width: '120px', marginTop: '10px' }} />
+          <img src={imageUrl} alt="미리보기" style={{ width: '120px' }} />
         </div>
       )}
+      {!productId && <p style={{ color: "gray" }}>제품 등록 후 이미지를 업로드할 수 있습니다.</p>}
     </div>
   );
 }

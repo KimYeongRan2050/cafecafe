@@ -1,4 +1,4 @@
-import { supabase } from '../services/supabaseClient';
+import { supabase } from "./supabaseClient";
 
 // 모든 상품 조회
 export async function getProducts() {
@@ -77,10 +77,7 @@ export async function getBaristaProducts() {
 
 
 export async function addBaristaProduct(product) {
-  // bean, barista, more → barista로 통일
-  const normalizedImageClass = ['coffee', 'latte', 'bean', 'barista', 'more'].includes(product.imageclass)
-    ? 'barista'
-    : product.imageclass;
+  const normalizedImageClass = product.imageclass?.trim() || 'barista';
 
   const { data, error } = await supabase
     .from('barista_products')

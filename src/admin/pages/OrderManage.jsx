@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
-import { getBaristaProducts, addBaristaProduct, updateBaristaProduct, deleteBaristaProduct } from "../../services/productService";
+import { 
+  getBaristaProducts, 
+  addBaristaProduct, 
+  updateBaristaProduct, 
+  deleteBaristaProduct 
+} from "../../services/productService";
 import AddOrderPopup from "../popup/AddOrderPopup";
+import { getProductImageUrl } from "../../services/productImage";
 
 function OrderManage() {
   const [products, setProducts] = useState([]);
@@ -16,8 +22,10 @@ function OrderManage() {
   }, []);
 
   const loadProducts = async () => {
-    const data = await getBaristaProducts();
-    const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const baristaList = await getBaristaProducts();
+
+    const combined = [...baristaList];
+    const sorted = combined.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     setProducts(sorted);
   };
 
@@ -42,7 +50,6 @@ function OrderManage() {
   };
 
   const navigate = useNavigate();
-
   const goToHome = () => {
     navigate('/');
   };
@@ -68,6 +75,11 @@ function OrderManage() {
 
           <div className="admin-service admin-coffee-product">
             {products.map(product => {
+              const imageSrc =
+                product.image && typeof product.image === "string" && product.image.trim() !== "" && product.image !== "null" && product.image !== "undefined"
+                  ? getProductImageUrl(product.image)
+                  : getProductImageUrl("default.png");
+
               const baseTags = Array.isArray(product.tags)
                 ? product.tags.filter(tag => tag.trim() !== "")
                 : typeof product.tags === "string"
@@ -84,10 +96,20 @@ function OrderManage() {
 
               return (
                 <div className='main_coffee main_stars' key={product.id}>
+
+                  <div className="main_img"> 
+                    <img 
+                      className="product-image" 
+                      src={imageSrc} 
+                      alt={product.name} /> 
+                  </div>
+
                   <div className="coffee black">
                     <ul className="product_icon">
-                      {tags.map(tag => (
-                        <li key={tag} className={tag.toLowerCase()}>{tag}</li>
+                      {booleanTags.map(tag => (
+                        <li key={tag} className={tag.toLowerCase()}>
+                          {tag}
+                        </li>
                       ))}
                     </ul>
 

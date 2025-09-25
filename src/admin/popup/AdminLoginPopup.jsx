@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/userService";
 
@@ -32,6 +32,21 @@ function AdminLoginPopup({ adminOnLogin, onClose, onLoginSuccess }) {
       alert("로그인 중 오류가 발생했습니다.");
     }
   };
+
+  useEffect(() => {
+    const scrolly = window.scrollY;
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${scrollY}px;
+      overflow-y: scroll;
+      width: 100%;
+    `;
+
+    return () => {
+      document.body.style.cssText = '';
+      window.scrollTo(0, scrolly);
+    };
+  }, []);  
 
   return (
     <div className="popup-overlay">

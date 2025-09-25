@@ -2,8 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
-import { getProducts, addProduct, updateProduct, deleteProduct, getBaristaProducts } from "../../services/productService";
+import { 
+  getProducts, 
+  addProduct, 
+  updateProduct, 
+  deleteProduct, 
+  getBaristaProducts 
+} from "../../services/productService";
 import AddProductPopup from "../popup/AddProductPopup";
+import { getProductImageUrl } from "../../services/productImage";
 
 function ProductManage() {
   const [products, setProducts] = useState([]);
@@ -17,14 +24,11 @@ function ProductManage() {
 
   const loadProducts = async () => {
     const productList = await getProducts(); // coffee, latte
-    const baristaList = await getBaristaProducts(); // bean, barista, more
-
-    const combined = [...productList, ...baristaList];
+    
+    const combined = [...productList];
     const sorted = combined.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     setProducts(sorted);
   };
-
-  
 
   const handleAddClick = () => {
     setShowAddPopup(true);
@@ -48,7 +52,6 @@ function ProductManage() {
 
 
   const navigate = useNavigate();
-
   const goToHome = () => {
     navigate('/');
   };
@@ -69,12 +72,17 @@ function ProductManage() {
             <h3>메뉴 관리</h3>
             <p>카페 메뉴를 추가, 편집, 삭제할 수 있습니다.</p>
             <button onClick={handleAddClick}>
-              <i class="bi bi-bag-plus"></i>메뉴 추가
+              <i className="bi bi-bag-plus"></i>메뉴 추가
             </button>
           </div>
 
           <div className="admin-service admin-coffee-product">
             {products.map(p => {
+              const imageSrc =
+                p.image && typeof p.image === "string" && p.image.trim() !== "" && p.image !== "null" && p.image !== "undefined"
+                  ? getProductImageUrl(p.image)
+                  : getProductImageUrl("default.png");
+
               const baseTags = Array.isArray(p.tags)
                 ? p.tags.filter(tag => tag.trim() !== "")
                 : typeof p.tags === "string"
@@ -91,14 +99,23 @@ function ProductManage() {
 
               return (
                 <div className='main_coffee main_stars' key={p.id}>
+
+                  <div className="main_img"> 
+                    <img 
+                      className="product-image" 
+                      src={imageSrc} 
+                      alt={p.name} /> 
+                  </div>
+
                   <div className="coffee black">
                     <ul className="product_icon">
-                      {tags.map(tag => (
+                      {booleanTags.map(tag => (
                         <li key={tag} className={tag.toLowerCase()}>
                           {tag}
                         </li>
                       ))}
                     </ul>
+
 
                     <ul className='product_icon'>
                       <li className={`stock ${p.stock < 10 ? 'out' : ''}`}>
