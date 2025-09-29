@@ -11,10 +11,12 @@ export async function getUsers() {
 }
 
 // 직원 추가
-export async function addUser(name) {
+export async function addUser({ id, name, email, role, department, userData }) {
   const { data, error } = await supabase
     .from('users')
-    .insert([name])
+    .insert([
+      { id, name, email, role, department, userData }
+    ])
     .select();
 
   if (error) throw error;
@@ -22,15 +24,17 @@ export async function addUser(name) {
   return data[0];
 }
 
-// 직원 수정
-export async function updateUser(id,  updates) {
+// 직원 수정: password, app_metadata 제거
+export async function updateUser(id, updates) {
+  const { password, app_metadata, user_metadata, ...cleanedUpdates } = updates;
+
   const { data, error } = await supabase
-    .from('users')
-    .update(updates)
-    .eq('id', id)
+    .from("users")
+    .update(cleanedUpdates)
+    .eq("id", id)
     .select();
 
-  if(error) throw error;
+  if (error) throw error;
   return data[0];
 }
 
@@ -58,9 +62,8 @@ export async function loginUser(email, password) {
     };
   }
 
-  // 1. Supabase Auth 로그인
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-    email,
+    email: email.trim(),
     password
   });
 
@@ -84,26 +87,38 @@ export async function loginUser(email, password) {
     throw new Error("관리자 권한이 없습니다.");
   }
 
-  return {
-    id: userId,
-    name: userData.name,
-    role: userData.role,
-    email: userData.email
-  };
+  return userData;
 }
 
-export async function registerUser(email, password, name, role = 'staff') {
-  const { data, error } = await supabase.auth.signUp({
+// 직원 등록: Auth + users 테이블 삽입
+export async function registerUser(email, password, userInfo) {
+  // 1. Supabase Auth 등록
+  const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
-    password,
-    options: {
-      data: {
-        name,
-        role
-      }
-    }
+    password
   });
 
-  if (error) throw error;
-  return data;
+  if (authError) throw authError;
+
+  const userId = authData.user?.id;
+  if (!userId) throw new Error("사용자 ID 생성 실패");
+
+  // 2. users 테이블에 삽입
+  const { error: insertError } = await supabase.from("users").insert([
+    {
+      id: userId,
+      email,
+      name: userInfo.name,
+      role: userInfo.role,
+      status: userInfo.status,
+      phone: userInfo.phone,
+      salary: userInfo.salary,
+      joined_at: userInfo.joined_at,
+      profile_img: userInfo.profile_img
+    }
+  ]);
+
+  if (insertError) throw insertError;
+
+  return authData.user;
 }

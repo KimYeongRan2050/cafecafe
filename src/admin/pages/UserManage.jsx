@@ -37,7 +37,6 @@ function UserManage() {
   }
 
   const navigate = useNavigate();
-
   const goToHome = () => {
     navigate('/');
   };
@@ -78,7 +77,7 @@ function UserManage() {
                   <ul>
                     <li><i className="bi bi-envelope"></i>{user.email}</li>
                     <li><i className="bi bi-phone"></i>{user.phone}</li>
-                    <li><i className="bi bi-calendar"></i>입사일 : {formatToKST(user.employment_date)}</li>
+                    <li><i className="bi bi-calendar"></i>입사일 : {formatToKST(user.joined_at)}</li>
                     <li><i className="bi bi-coin"></i>시급 : ₩{user.salary}</li>
                   </ul>
                 </div>

@@ -5,6 +5,7 @@ import LoginPopup from "../pages/LoginPopup";
 import Signup from "../pages/Signup";
 import AdminLoginPopup from "../admin/popup/AdminLoginPopup";
 import { supabase } from "../services/supabaseClient";
+import TestUserFlow from "../admin/popup/TestUserFlow";
 
 
 function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, onLogin, userInfo, setUserInfo }) {
@@ -12,6 +13,8 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showSignupPopup, setShowSignupPopup] = useState(false);
   const [showAdminLoginPopup, setShowAdminLoginPopup] = useState(false);
+  const [showTestUserFlowPopup, setShowTestUserFlowPopup] = useState(false);
+
   const menuRef = useRef(null);
 
   const navigate = useNavigate();
@@ -101,6 +104,7 @@ useEffect(() => {
           <div className="admin_btn">
             <button onClick={() => {
               setShowAdminLoginPopup(true);
+              //setShowTestUserFlowPopup(true);
               closeMenu();
             }}>
               <i className="bi bi-gear-fill"></i>
@@ -154,6 +158,7 @@ useEffect(() => {
             <div className="admin_btn">
               <button onClick={() => {
                 setShowAdminLoginPopup(true);
+                //setShowTestUserFlowPopup(true);
                 closeMenu();
               }}>
                 <i className="bi bi-gear-fill"></i>
@@ -240,6 +245,14 @@ useEffect(() => {
         />
       )}
 
+      {showTestUserFlowPopup && (
+        <div className="popup-overlay" onClick={() => setShowTestUserFlowPopup(false)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <TestUserFlow />
+            <button className="close-btn" onClick={() => setShowTestUserFlowPopup(false)}>닫기</button>
+          </div>
+        </div>
+      )}
 
 
     </div>

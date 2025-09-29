@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { addUser, updateUser } from "../../services/userService";
+import { addUser, updateUser, registerUser } from "../../services/userService";
 
-function AddUserPopup({ onClose, onAdd, user, isEdit }) {
+function AddUserPopup({ onClose, onAdd, user = null, isEdit = false }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    role: "",
+    password: "",
+    role: "staff",
     phone: "",
     salary: "",
-    employment_date: "",
+    joined_at: "",
     status: "근무",
     profile_img: ""
   });
 
   // user가 있으면 초기값으로 설정 (수정 모드)
   useEffect(() => {
-    if (user) setForm(user);
+    if (user) {
+      setForm({
+        ...user,
+        password: "" // 수정 시 비밀번호는 입력받도록 초기화
+      });
+    }
   }, [user]);
 
   const handleChange = e => {
@@ -25,20 +31,19 @@ function AddUserPopup({ onClose, onAdd, user, isEdit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newUser = { ...form };
-
     try {
       let savedUser;
-      if (isEdit && user) {
-        savedUser = await updateUser(user.id, newUser);
+      if (isEdit) {
+        const { password, ...updates } = form; // password 제거
+        savedUser = await updateUser(user.id, updates);
       } else {
-        savedUser = await addUser(newUser);
+        const cleanedEmail = form.email.trim();
+        savedUser = await registerUser(cleanedEmail, form.password, form);
       }
       onAdd(savedUser);
       onClose();
-    } catch (error) {
-      console.error("저장 오류:", error);
-      alert("저장 중 오류 발생: " + (error.message || "알 수 없는 오류"));
+    } catch (err) {
+      alert((isEdit ? "수정" : "등록") + " 실패: " + err.message);
     }
   };
 
@@ -65,10 +70,15 @@ function AddUserPopup({ onClose, onAdd, user, isEdit }) {
         <form onSubmit={handleSubmit}>
           <input name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
           <input name="email" placeholder="이메일" value={form.email} onChange={handleChange} required />
+          
+          {!isEdit && (
+            <input name="password" type="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />
+          )}
+
           <input name="role" placeholder="직무" value={form.role} onChange={handleChange} required />
           <input name="phone" placeholder="전화번호" value={form.phone} onChange={handleChange} />
           <input name="salary" placeholder="시급" value={form.salary} onChange={handleChange} />
-          <input name="employment_date" type="date" placeholder="입사일" value={form.employment_date} onChange={handleChange} />
+          <input name="joined_at" type="date" placeholder="입사일" value={form.joined_at} onChange={handleChange} />
           <input name="profile_img" placeholder="프로필 이미지 URL" value={form.profile_img} onChange={handleChange} />
           <button type="submit">{isEdit ? "수정" : "추가"}</button>
         </form>
