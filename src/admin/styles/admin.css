@@ -9,23 +9,47 @@
   width: 200px;
 }
 .admin-logobox{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  width: 200px;
+  padding: 30px 20px;
   border-bottom: 1px solid #fff;
 }
-.admin-logo{
-  display: block;
-  width: 140px;
+
+.admin-info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-profile-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-profile {
+  width: 60px;
   height: 60px;
-  background-image: url('../../assets/img/logo.png');
-  text-indent: -9999px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: opacity 0.3s ease-in-out;
 }
-.amdin-logobox h3{
-  font-family: monospace;
-  margin-top: 5px;
+
+.logout-btn {
+  margin-top: 10px;
+  font-size: 11px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
+
+.logout-btn:hover {
+  border: 0;
+  color: #fff;
+  background-color: #d32f2f;
+}
+
 .admin-menu{
   margin-top: 20px;
 }
@@ -119,6 +143,7 @@ p{
 .item_list{
   position: relative;
 }
+
 .the_best_drink{
   width: 60%;
   border: 1px solid #fff;
@@ -211,6 +236,16 @@ p{
   grid-template-columns: repeat(3, 1fr);
 }
 
+.dashboard-day-total{
+  width: 100%;
+  border: 1px solid #fff;
+  padding: 25px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+
+
 
 
 
@@ -237,7 +272,7 @@ p{
 
 .admin-coffee-product{
   min-width: 1160px;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .menu-btn{
@@ -305,12 +340,6 @@ p{
 .manager-user{
   display: flex;
   align-items: center;
-}
-.manager-user img{
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  background: #ddd;
 }
 .manager-name{
   margin-left: 20px;

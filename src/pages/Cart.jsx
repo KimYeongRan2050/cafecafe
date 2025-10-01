@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { requestKakaoPay } from "../services/paymentService";
 
 function Cart({ cart, setCart }) {
   const removeItem = (index) => {
@@ -39,8 +40,21 @@ function Cart({ cart, setCart }) {
     });
   };
 
+const handlePayment = async () => {
+  const orderInfo = {
+    item_name: "아메리카노",
+    quantity: 2,
+    total_amount: 6000,
+    user_id: "user-123"
+  };
 
-
+  try {
+    const { redirectUrl } = await requestKakaoPay(orderInfo);
+    window.location.href = redirectUrl; // 결제 페이지로 이동
+  } catch (err) {
+    alert("결제 요청 실패: " + err.message);
+  }
+};
 
 
   useEffect(() => {
@@ -69,40 +83,46 @@ function Cart({ cart, setCart }) {
         <p className="empty">장바구니가 비어 있습니다.</p>
       ) : (
         <ul className="cart-list">
-          {cart.map((item, index) => (
-            <li key={item.id} className="cart-item">
-              <div className="cart-img">
-                <img src={item.image} alt={item.name} className="cart-thumb" />
-              </div>
-              <div className="cart-txt">
-                <div className="cart-info">
-                  <span className="cart-name">{item.name}</span>
-                  <button className="cart-remove" onClick={() => removeItem(index)}>
-                    <i className="bi bi-trash"></i>삭제
-                  </button>
+          {cart.map((item, index) => {
+            const imageSrc = item.image?.trim()
+              ? item.image
+              : "/images/default.png"; // 기본 이미지 경로
+
+            return (
+              <li key={item.id} className="cart-item">
+                <div className="cart-img">
+                  <img src={imageSrc} alt={item.name} className="cart-thumb" />
                 </div>
-                <div className="cart-info">
-                  <div className="cart-qty-control">
-                    <button className="qty-btn" onClick={() => decreaseQuantity(index)}>-</button>
-                    <span className="qty-value">{item.quantity || 1}</span>
-                    <button className="qty-btn" onClick={() => increaseQuantity(index)}>+</button>
+                <div className="cart-txt">
+                  <div className="cart-info">
+                    <span className="cart-name">{item.name}</span>
+                    <button className="cart-remove" onClick={() => removeItem(index)}>
+                      <i className="bi bi-trash"></i>삭제
+                    </button>
                   </div>
-                  <span className="cart-price">
-                    ￦{(item.price * (item.quantity || 1)).toLocaleString()}
-                  </span>
+                  <div className="cart-info">
+                    <div className="cart-qty-control">
+                      <button className="qty-btn" onClick={() => decreaseQuantity(index)}>-</button>
+                      <span className="qty-value">{item.quantity || 1}</span>
+                      <button className="qty-btn" onClick={() => increaseQuantity(index)}>+</button>
+                    </div>
+                    <span className="cart-price">
+                      ￦{(item.price * (item.quantity || 1)).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       )}
-      
+
       <div className="cart-total">
-        <strong>총액 :</strong> 
+        <strong>총액 :</strong>
         <span>￦{total.toLocaleString()}</span>
       </div>
 
-      <button className="close-btn">결제</button>
+      <button className="close-btn" onClick={handlePayment}>카카오페이로 결제</button>
     </div>
   );
 }

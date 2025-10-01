@@ -16,11 +16,10 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
     product.is_new ? "new" : null,
   ].filter(Boolean);
 
-  const tags  = [...baseTags, ...booleanTags];
-  
+  const tags = [...baseTags, ...booleanTags];
+
   return (
     <div className="main_coffee main_stars">
-
       <div className="main_img">
         <img
           className="product-image"
@@ -33,7 +32,6 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
       </div>
 
       <div className={product.imageClass || "coffee"}>
-
         <ul className="product_icon">
           {tags.map((tag) => (
             <li key={`${product.id}-${tag}`} className={tag.toLowerCase()}>
@@ -48,7 +46,7 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
           </li>
         </ul>
       </div>
-    
+
       <div className="main_txt">
         <div className="star">
           {[...Array(5)].map((_, i) => (
@@ -64,7 +62,7 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
           ￦{product.price ? product.price.toLocaleString() : "0"}
         </div>
         <div className="btn">
-          <button onClick={() => onAddToCart(product)}>장바구니</button>
+          <button onClick={() => onAddToCart({ ...product, image: imageUrl })}>장바구니</button>
           <button onClick={() => onCancel(product)}>취소</button>
         </div>
       </div>

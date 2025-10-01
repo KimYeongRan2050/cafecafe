@@ -24,6 +24,7 @@ function AddUserPopup({ onClose, onAdd, user, isEdit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const newUser = { ...form };
     try {
       await addUser(newUser);

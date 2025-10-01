@@ -114,11 +114,26 @@ export async function registerUser(email, password, userInfo) {
       phone: userInfo.phone,
       salary: userInfo.salary,
       joined_at: userInfo.joined_at,
-      profile_img: userInfo.profile_img
+      profile_img: userInfo.profile_img || "staff-default.png"
     }
   ]);
 
   if (insertError) throw insertError;
 
   return authData.user;
+}
+
+// 재직 직원 수
+export async function getTotalStaffCount() {
+  const { count, error } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "재직");
+
+  if (error) {
+    console.error("직원 수 조회 실패:", error.message);
+    return 0;
+  }
+
+  return count || 0;
 }

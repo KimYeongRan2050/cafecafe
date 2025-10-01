@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsers, addUser, removeUser, updateUser } from "../../services/userService";
+import { getUsers, addUser, removeUser, updateUser,} from "../../services/userService";
+import { getUserImageUrl } from "../../services/userImageService";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import AddUserPopup from "../popup/AddUserPopup";
@@ -10,12 +11,33 @@ function UserManage() {
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const [showEditPopup, setShowEditPopup] = useState(false);
-
   
+  // 직원 목록 불러오기
+  const fetchUsers = async () => {
+    try {
+      const fetchedUsers = await getUsers();
+      const sorted = [...fetchedUsers].sort(
+        (a, b) => new Date(a.joined_at) - new Date(b.joined_at)
+      );
+      setUsers(sorted);
+    } catch (err) {
+      console.error("직원 목록 불러오기 실패:", err.message);
+    }
+  };
+
   useEffect(() => {
-    getUsers().then(setUsers).catch(console.error);
+    fetchUsers();
   }, []);
 
+  useEffect(() => {
+    getUsers()
+      .then(fetchedUsers => {
+        // 입사일 기준 정렬
+        const sorted = [...fetchedUsers].sort((a, b) => new Date(a.joined_at) - new Date(b.joined_at));
+        setUsers(sorted);
+      })
+      .catch(console.error);
+  }, []);
 
   const handleAddUser = (savedUser) => {
     setUsers(prev => [...prev, savedUser]); // 항상 맨 뒤에 추가
@@ -23,12 +45,15 @@ function UserManage() {
 
   const handleRemove = async (id) => {
     await removeUser(id);
-    setUsers(users.filter(u => u.id !== id));
+    setUsers(prev => prev.filter(u => u.id !== id));
   };
 
+  // 직원 편집: 기존 위치 유지
   const handleEditUser = (savedUser) => {
-    setUsers(prev => prev.map(u => u.id === savedUser.id ? savedUser : u));
-  };
+    setUsers(prev =>
+      prev.map(user => user.id === savedUser.id ? { ...user, ...savedUser } : user)
+    );
+  }
   
   // UTC → KST 변환 함수
   function formatToKST(utcString) {
@@ -65,7 +90,13 @@ function UserManage() {
               <div className="manager" key={user.id}>
                 {/* 직원 정보 표시 */}
                 <div className="manager-user">
-                  <img src={user.profile_img || ""} alt="" />
+
+                  <img
+                    src={getUserImageUrl(user.profile_img)}
+                    alt={`${user.name}의 프로필`}
+                    className="admin-profile"
+                  />
+
                   <div className="manager-name">
                     <p className="name">{user.name}</p>
                     <p className="job">{user.role}</p>

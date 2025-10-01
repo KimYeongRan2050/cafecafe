@@ -6,6 +6,7 @@ import MainRoutes from './routes/MainRoutes';
 import AdminRoutes from './admin/routes/AdminRoutes.jsx';
 import Header from './components/Header.jsx';
 import { supabase } from './services/supabaseClient.js';
+import { AdminAuthProvider } from './context/AdminAuthContext.jsx';
 
 
 function App() {
@@ -29,10 +30,7 @@ function App() {
       .eq("custom_id", id)
       .single();
 
-    if (error || !data) return null;
-
-    const isMatch = pw === data.password;
-    if (!isMatch) return null;
+    if (error || !data || pw !== data.password) return null;
 
     return {
       id: data.custom_id,
@@ -41,45 +39,8 @@ function App() {
     };
   };
 
-  // 관리자 시 정보 추가
-  const handleAdminLogin = async (email, password) => {
-    // 1. Supabase Auth 인증
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (authError || !authData?.user) {
-      alert("로그인 실패: " + authError.message);
-      return null;
-    }
-
-    // 2. member 테이블에서 관리자 권한 확인
-    const { data: memberData, error: memberError } = await supabase
-      .from("member")
-      .select("name, role, is_verified, password")
-      .eq("id", authData.user.id)
-      .single();
-
-    if (memberError || !memberData || !memberData.is_verified) {
-      alert("관리자 권한이 없습니다.");
-      return null;
-    }
-
-    return {
-      name: memberData.name,
-      role: memberData.role,
-      email: authData.user.email
-    };
-  };
-
-
-  //const handleSignup = (member) => {
-    //setMembers(prev => [...prev, { ...member, id: Date.now() }]);
-  //};
-
   return (
-    <>
+    <AdminAuthProvider>
       {!location.pathname.startsWith("/admin") && (
         <Header
           cart={cart}
@@ -97,8 +58,10 @@ function App() {
         <Route path="/" element={<Index cart={cart} setCart={setCart} />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/*" element={<MainRoutes onLogin={handleLogin} />} />
+        {/* <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/order/complete" element={<OrderComplete />} /> */}
       </Routes>
-    </>
+    </AdminAuthProvider>
   );
 }
 

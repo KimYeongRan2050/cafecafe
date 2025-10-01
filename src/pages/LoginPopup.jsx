@@ -58,12 +58,10 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
               <button type="submit"> 로그인</button>
               <button type="button" onClick={onSignupClick}> 회원가입</button>
             </div>
-
           </form>
-
-          <button className="close-btn" onClick={onClose}>닫기</button>
-
         </div>
+        
+        <button className="close-btn" onClick={onClose}>닫기</button>
       </div>
     </div>
   )

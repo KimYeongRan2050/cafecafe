@@ -68,8 +68,9 @@ function Signup({ onSignup, onClose }) {
             
             <button type="submit">회원가입</button>
           </form>
-          <button className="close-btn" onClick={onClose}>닫기</button>
         </div>
+        
+        <button className="close-btn" onClick={onClose}>닫기</button>
       </div>
 
     </div>

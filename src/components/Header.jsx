@@ -5,7 +5,6 @@ import LoginPopup from "../pages/LoginPopup";
 import Signup from "../pages/Signup";
 import AdminLoginPopup from "../admin/popup/AdminLoginPopup";
 import { supabase } from "../services/supabaseClient";
-import TestUserFlow from "../admin/popup/TestUserFlow";
 
 
 function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, onLogin, userInfo, setUserInfo }) {
@@ -78,7 +77,6 @@ useEffect(() => {
         </nav>
 
         <div className='top_user'>
-          <div className="order"><Link to="">주문문의</Link></div>
           <div className="signup_name">
             {userInfo ? (
               <>
@@ -88,6 +86,7 @@ useEffect(() => {
               <h4>로그인해주세요</h4>
             )}
           </div>
+          <div className="order"><Link to="">주문문의</Link></div>
           <div className="icon_cart">
             <span>{totalQuantity}</span>
             <button

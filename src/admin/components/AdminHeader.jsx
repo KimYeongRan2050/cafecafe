@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 function AdminHeader() {
   const navigate = useNavigate();
-
   const goToHome = () => {
     navigate('/');
   };

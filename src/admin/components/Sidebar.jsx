@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import '../styles/admin.css';
+import { useAdminAuth } from "../../context/AdminAuthContext";
+import { getUserImageUrl } from "../../services/userImageService";
+import "../styles/admin.css";
 
 function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { adminInfo, logout } = useAdminAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (adminInfo?.profile_img) {
+      const img = new Image();
+      img.src = getUserImageUrl(adminInfo.profile_img);
+    }
+  }, [adminInfo]);
 
   const menuList = [
     { to: "/admin/dashboard", icon: "bi bi-house-fill", label: "전체 현황" },
@@ -14,12 +30,28 @@ function Sidebar() {
     { to: "/admin/users", icon: "bi bi-person-vcard-fill", label: "직원 관리" },
   ];
 
-  return(
+  return (
     <>
       <div className="admin-logobox">
-        <div className="admin-logo">로고</div>
-        <h3>관리자대시보드</h3>
+        {adminInfo && (
+          <div className="admin-info-wrapper">
+            <div className="admin-profile-box">
+              <img
+                src={getUserImageUrl(adminInfo.profile_img)}
+                alt="관리자 프로필"
+                className="admin-profile"
+              />
+            </div>
+            <div className="admin-info">
+              <h3>{adminInfo.name} 님</h3>
+              <button className="logout-btn" onClick={handleLogout}>
+                <i className="bi bi-box-arrow-right"></i> 로그아웃
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
       <div className="admin-menu">
         <ul>
           {menuList.map(menu => (
@@ -36,7 +68,7 @@ function Sidebar() {
         </ul>
       </div>
     </>
-  )
-};
+  );
+}
 
-export default Sidebar;
+export default React.memo(Sidebar);
