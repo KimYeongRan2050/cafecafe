@@ -1,27 +1,19 @@
 import { supabase } from "./supabaseClient";
 
 export async function requestKakaoPay(orderInfo) {
-  try {
-    const response = await fetch("/api/kakao-pay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(orderInfo)
-    });
+  // 예시: 카카오페이 API 요청
+  const response = await fetch("/api/kakao-pay", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(orderInfo)
+  });
 
-    if (!response.ok) {
-      throw new Error("카카오페이 요청 실패");
-    }
-
-    const data = await response.json();
-
-    // 예: { redirectUrl: "https://...", tid: "T1234567890" }
-    return data;
-  } catch (error) {
-    console.error("카카오페이 요청 중 오류 발생:", error.message);
-    throw error;
+  if (!response.ok) {
+    throw new Error("카카오페이 요청 실패");
   }
+
+  const data = await response.json();
+  return data; // 예: { redirectUrl: "...", tid: "..." }
 }
 
 

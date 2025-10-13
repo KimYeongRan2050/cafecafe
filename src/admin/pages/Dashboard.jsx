@@ -18,15 +18,29 @@ function Dashboard() {
   const [topDrinks, setTopDrinks] = useState([]);
   const [lowStock, setLowStock] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      setTotalStaff(await getTotalStaffCount());
-      setTodaySales(await getTodaySummary());
-      setTopDrinks(await getTopDrinks());
-      setLowStock(await getLowInventory());
+useEffect(() => {
+  async function fetchData() {
+    try {
+    const staffCount = await getTotalStaffCount();
+    setTotalStaff(staffCount);
+
+    const sales = await getTodaySummary();
+    setTodaySales(sales);
+
+    const drinks = await getTopDrinks();
+    setTopDrinks(drinks);
+
+    const inventory = await getLowInventory();
+    setLowStock(inventory);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-    fetchData();
-  }, []);
+  }
+  fetchData();
+}, []);
+
 
   return (
     <div className="admin-board">

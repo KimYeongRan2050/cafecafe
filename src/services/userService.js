@@ -126,14 +126,13 @@ export async function registerUser(email, password, userInfo) {
 // 재직 직원 수
 export async function getTotalStaffCount() {
   const { count, error } = await supabase
-    .from("users")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "재직");
+    .from('users') // 또는 실제 직원 테이블명
+    .select('*', { count: 'exact', head: true });
 
   if (error) {
     console.error("직원 수 조회 실패:", error.message);
     return 0;
   }
 
-  return count || 0;
+  return count;
 }

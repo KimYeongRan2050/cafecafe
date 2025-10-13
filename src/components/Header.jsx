@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
 import Cart from "../pages/Cart"; // Assuming Cart is a component in the same directory
 import LoginPopup from "../pages/LoginPopup";
 import Signup from "../pages/Signup";
@@ -15,8 +15,6 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
   const [showTestUserFlowPopup, setShowTestUserFlowPopup] = useState(false);
 
   const menuRef = useRef(null);
-
-  const navigate = useNavigate();
 
   //메뉴 토글 함수
   const handleMenuClick = () => {
@@ -37,19 +35,19 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
   };
 
   // 메뉴 외부 클릭 시 닫기
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsMenuOpen(false);
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
 
-  document.addEventListener("mousedown", handleClickOutside); // 이벤트 타입 수정
+    document.addEventListener("mousedown", handleClickOutside); // 이벤트 타입 수정
 
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside); // 정리도 동일하게
-  };
-}, [isMenuOpen]);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); // 정리도 동일하게
+    };
+  }, [isMenuOpen]);
 
   const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
@@ -61,10 +59,10 @@ useEffect(() => {
         </div>
 
         <nav>
-          <div><Link to="">커피</Link></div>
-          <div><Link to="">라떼&곡물</Link></div>
-          <div><Link to="">카페리움</Link></div>
-          <div><Link to="">스토어</Link></div>
+          <div><ScrollLink to="coffeeSection" smooth={true} duration={500} offset={-160}>커피</ScrollLink></div>
+          <div><ScrollLink to="latteSection" smooth={true} duration={500} offset={-160}>라떼&곡물</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-160}>카페리움</ScrollLink></div>
+          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-160}>스토어</ScrollLink></div>
         </nav>
 
         <div className='top_user'>
@@ -125,10 +123,10 @@ useEffect(() => {
         {/* 메뉴리스트 */}
         <div className={`mobile_menu_list ${isMenuOpen ? "open" : "close"}`} ref={menuRef}>
           <div className="mobile_menu_product" id="menuLinks">
-            <div><Link to="" onClick={closeMenu}>커피</Link></div>
-            <div><Link to="" onClick={closeMenu}>라떼&곡물</Link></div>
-            <div><Link to="" onClick={closeMenu}>카페리움</Link></div>
-            <div><Link to="" onClick={closeMenu}>스토어</Link></div>
+            <div><ScrollLink to="coffeeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>커피</ScrollLink></div>
+          <div><ScrollLink to="latteSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>라떼&곡물</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>카페리움</ScrollLink></div>
+          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>스토어</ScrollLink></div>
           </div>
 
           <div className="mobile_user">

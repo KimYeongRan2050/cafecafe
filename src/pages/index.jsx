@@ -83,7 +83,7 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
 
         {!loading && !error && (
           <>
-            <h2>엄선된 원두와 정성스러운 로스팅으로 만든 프리미엄 커피</h2>
+            <h2 id='coffeeSection'>엄선된 원두와 정성스러운 로스팅으로 만든 프리미엄 커피</h2>
             <div className='menu_coffee_full'>
               <div className="coffee_product">
                   {coffeeProducts.length > 0 ? (
@@ -96,7 +96,7 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
               </div>
             </div>
 
-            <h2>부드러운 우유거품과 달콤한 바닐라 시럽의 완벽한 조화</h2>
+            <h2 id='latteSection'>부드러운 우유거품과 달콤한 바닐라 시럽의 완벽한 조화</h2>
             <div className='menu_coffee_full'>
               <div className="coffee_product">
                 {latteProducts.length > 0 ? (
@@ -109,7 +109,7 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
               </div>
             </div>
 
-            <h2>최고급 원두부터 전문 바리스타 장비까지</h2>
+            <h2 id='cafereumSection'>최고급 원두부터 전문 바리스타 장비까지</h2>
             <div className='menu_coffee_full'>
               <div className="coffee_product">
                 {baristaProducts.length > 0 ? (
@@ -124,7 +124,7 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
           </>
         )}
 
-        <div className='story'>
+        <div id='storeSection' className='story'>
           <h2>카페 라베 소개</h2>
         </div>
       </div>
