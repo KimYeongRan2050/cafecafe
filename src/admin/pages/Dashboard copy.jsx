@@ -12,7 +12,7 @@ import {
 } from "../../services/dashboardService";
 
 
-function Dashboard() {
+function Dashboard1() {
   const [totalStaff, setTotalStaff] = useState(0);
   const [todaySales, setTodaySales] = useState(0);
   const [topDrinks, setTopDrinks] = useState([]);
@@ -136,4 +136,4 @@ function Dashboard() {
   )
 };
 
-export default Dashboard;
+export default Dashboard1;

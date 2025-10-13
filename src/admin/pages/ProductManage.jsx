@@ -115,7 +115,6 @@ function ProductManage() {
                       ))}
                     </ul>
 
-
                     <ul className='product_icon'>
                       <li className={`stock ${p.stock < 10 ? 'out' : ''}`}>
                         {p.stock ?? 0}

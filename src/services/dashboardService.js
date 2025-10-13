@@ -1,6 +1,5 @@
 import { supabase } from "./supabaseClient";
 
-// 오늘 매출 합계
 export async function getTodaySummary() {
   const today = new Date().toISOString().split("T")[0];
   const { data, error } = await supabase
@@ -10,10 +9,9 @@ export async function getTodaySummary() {
     .lte("created_at", `${today}T23:59:59`);
 
   if (error) throw error;
-  return data.reduce((sum, order) => sum + order.total_price, 0);
+  return data.reduce((sum, order) => sum + (order.total_price || 0), 0);
 }
 
-// 인기 음료 TOP 5
 export async function getTopDrinks() {
   const today = new Date().toISOString().split("T")[0];
   const { data, error } = await supabase
@@ -26,28 +24,26 @@ export async function getTopDrinks() {
 
   const drinkMap = {};
   data.forEach(order => {
-    drinkMap[order.product_id] = (drinkMap[order.product_id] || 0) + order.quantity;
+    if (order.product_id && order.quantity) {
+      drinkMap[order.product_id] = (drinkMap[order.product_id] || 0) + order.quantity;
+    }
   });
 
   const productIds = Object.keys(drinkMap);
-  const { data: products } = await supabase
+  if (productIds.length === 0) return [];
+
+  const { data: products, error: productError } = await supabase
     .from("products")
     .select("id, name")
     .in("id", productIds);
 
+  if (productError) throw productError;
+
   return products
-    .map(p => ({ name: p.name, quantity: drinkMap[p.id] }))
+    .map(p => ({
+      name: p.name,
+      quantity: drinkMap[p.id] || 0
+    }))
     .sort((a, b) => b.quantity - a.quantity)
     .slice(0, 5);
-}
-
-// 재고 부족 품목
-export async function getLowInventory() {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .lt("stock", 10); // 기준: 10개 미만
-
-  if (error) throw error;
-  return data;
 }

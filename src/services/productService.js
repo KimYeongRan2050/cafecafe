@@ -113,3 +113,56 @@ export async function deleteBaristaProduct(id) {
   if (error) throw error;
 }
 
+//재고 부족 추가
+export async function getAllLowStockItems() {
+  const [menuRes, baristaRes] = await Promise.all([
+    supabase.from('products').select('id, name, stock').lt('stock', 10),
+    supabase.from('barista_products').select('id, name, stock').lt('stock', 10)
+  ]);
+
+  if (menuRes.error || baristaRes.error) {
+    throw menuRes.error || baristaRes.error;
+  }
+
+  const combined = [...menuRes.data, ...baristaRes.data];
+
+  return combined.map(item => ({
+    ...item,
+    status: Number(item.stock) < 5 ? '긴급' : '부족'
+  }));
+}
+
+
+// 단일 상품 조회 (products 테이블)
+export async function getProductById(id) {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("getProductById error:", error.message);
+    return null;
+  }
+
+  return data;
+}
+
+// 단일 바리스타 상품 조회 (barista_products 테이블)
+export async function getBaristaProductById(id) {
+  const { data, error } = await supabase
+    .from("barista_products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("getBaristaProductById error:", error.message);
+    return null;
+  }
+
+  return data;
+}
+
+

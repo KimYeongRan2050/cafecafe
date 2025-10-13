@@ -537,6 +537,11 @@ font-weight: bold;
   background: #ff2222;
 }
 
+.cart-list li .cart-remove:hover{
+  background: #ff2222;
+}
+
+
 .cart-total{
   display: flex;
   justify-content: space-between;

@@ -48,3 +48,4 @@ export const saveProductImagePath = async (productId, imagePath) => {
     throw error;
   }
 };
+

@@ -211,21 +211,21 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
             return null;
           }
 
-          // 2. member 테이블에서 관리자 권한 확인
-          const { data: memberData, error: memberError } = await supabase
-            .from("member")
+          // users 테이블에서 관리자 권한 확인
+          const { data: userData, error: userError } = await supabase
+            .from("users")
             .select("name, role, is_verified")
             .eq("id", authData.user.id)
             .single();
 
-          if (memberError || !memberData || !memberData.is_verified) {
+          if (userError || !userData || !userData.is_verified || userData.role !== "admin") {
             alert("관리자 권한이 없습니다.");
             return null;
           }
 
           return {
-            name: memberData.name,
-            role: memberData.role,
+            name: userData.name,
+            role: userData.role,
             email: authData.user.email
           };
 
