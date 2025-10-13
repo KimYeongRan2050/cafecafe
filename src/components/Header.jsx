@@ -36,15 +36,6 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
     setShowSignupPopup(false);
   };
 
-  const handleSubmit = async () => {
-    const user = await onLogin(email, password);
-    if (user) {
-      onLoginSuccess(user);
-    } else {
-      alert("로그인 실패");
-    }
-  };
-
   // 메뉴 외부 클릭 시 닫기
 useEffect(() => {
   const handleClickOutside = (event) => {
@@ -70,10 +61,10 @@ useEffect(() => {
         </div>
 
         <nav>
-          <div><Link to="">상품</Link></div>
-          <div><Link to="">카페소개</Link></div>
-          <div><Link to="">주문방법</Link></div>
-          <div><Link to="">문의</Link></div>
+          <div><Link to="">커피</Link></div>
+          <div><Link to="">라떼&곡물</Link></div>
+          <div><Link to="">카페리움</Link></div>
+          <div><Link to="">스토어</Link></div>
         </nav>
 
         <div className='top_user'>
@@ -86,7 +77,7 @@ useEffect(() => {
               <h4>로그인해주세요</h4>
             )}
           </div>
-          <div className="order"><Link to="">주문문의</Link></div>
+          
           <div className="icon_cart">
             <span>{totalQuantity}</span>
             <button
@@ -134,10 +125,10 @@ useEffect(() => {
         {/* 메뉴리스트 */}
         <div className={`mobile_menu_list ${isMenuOpen ? "open" : "close"}`} ref={menuRef}>
           <div className="mobile_menu_product" id="menuLinks">
-            <div><Link to="" onClick={closeMenu}>상품</Link></div>
-            <div><Link to="" onClick={closeMenu}>카페소개</Link></div>
-            <div><Link to="" onClick={closeMenu}>주문방법</Link></div>
-            <div><Link to="" onClick={closeMenu}>문의</Link></div>
+            <div><Link to="" onClick={closeMenu}>커피</Link></div>
+            <div><Link to="" onClick={closeMenu}>라떼&곡물</Link></div>
+            <div><Link to="" onClick={closeMenu}>카페리움</Link></div>
+            <div><Link to="" onClick={closeMenu}>스토어</Link></div>
           </div>
 
           <div className="mobile_user">
@@ -153,7 +144,7 @@ useEffect(() => {
                 </button>
               )}
             </div>
-            <div><a href="">주문문의</a></div>
+            
             <div className="admin_btn">
               <button onClick={() => {
                 setShowAdminLoginPopup(true);
@@ -243,16 +234,6 @@ useEffect(() => {
           }}
         />
       )}
-
-      {showTestUserFlowPopup && (
-        <div className="popup-overlay" onClick={() => setShowTestUserFlowPopup(false)}>
-          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <TestUserFlow />
-            <button className="close-btn" onClick={() => setShowTestUserFlowPopup(false)}>닫기</button>
-          </div>
-        </div>
-      )}
-
 
     </div>
 

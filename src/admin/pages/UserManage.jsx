@@ -76,15 +76,15 @@ function UserManage() {
           <AdminHeader />
         </div>
 
-        <div className='admin-menu-list'>
-          <div className="admin-title">
-            <h3>직원 관리</h3>
-            <p>직원 정보를 추가, 편집, 삭제할 수 있습니다.</p>
-            <button onClick={() => setShowAddPopup(true)}>
-              <i className="bi bi-bag-plus"></i>직원 추가
-            </button>
-          </div>
+        <div className="admin-title">
+          <h3>직원 관리</h3>
+          <p>직원 정보를 추가, 편집, 삭제할 수 있습니다.</p>
+          <button onClick={() => setShowAddPopup(true)}>
+            <i className="bi bi-bag-plus"></i>직원 추가
+          </button>
+        </div>
 
+        <div className='admin-menu-list'>
           <div className="admin-service user-service">
             {users.map(user => (
               <div className="manager" key={user.id}>

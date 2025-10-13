@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/userService";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 
-function AdminLoginPopup() {
+function AdminLoginPopup({onClose}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
@@ -56,7 +56,7 @@ function AdminLoginPopup() {
           </form>
         </div>
 
-        <button className="close-btn" onClick={handleClose }>닫기</button>
+        <button className="close-btn" onClick={onClose}>닫기</button>
         
       </div>
     </div>

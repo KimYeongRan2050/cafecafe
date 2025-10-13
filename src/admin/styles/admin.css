@@ -74,7 +74,7 @@
 
 .admin-right{
   width: calc(100% - 200px);
-  min-width: 1500px;
+  min-width: 1540px;
   padding: 30px 20px;
   background: #000;
   border-left: 1px solid #fff;
@@ -250,18 +250,13 @@ p{
 
 
 /* 메뉴 관리 */
-.admin-menu-list {
-  width: auto;
-  padding: 0;
-  margin-top: 30px;
-}
 .admin-title{
   position: relative;
+  margin-top: 30px;
 }
 .admin-title h3{
   font-size: 24px;
 }
-
 .admin-title button{
   width: auto;
   position: absolute;
@@ -269,9 +264,7 @@ p{
   top:0;
   padding: 5px 10px;
 }
-
 .admin-coffee-product{
-  min-width: 1160px;
   grid-template-columns: repeat(5, 1fr);
 }
 

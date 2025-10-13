@@ -66,16 +66,15 @@ function ProductManage() {
           <AdminHeader />
         </div>
 
-        <div className='admin-menu-list'>
-          
-          <div className="admin-title">
-            <h3>메뉴 관리</h3>
-            <p>카페 메뉴를 추가, 편집, 삭제할 수 있습니다.</p>
-            <button onClick={handleAddClick}>
-              <i className="bi bi-bag-plus"></i>메뉴 추가
-            </button>
-          </div>
+        <div className="admin-title">
+          <h3>메뉴 관리</h3>
+          <p>카페 메뉴를 추가, 편집, 삭제할 수 있습니다.</p>
+          <button onClick={handleAddClick}>
+            <i className="bi bi-bag-plus"></i>메뉴 추가
+          </button>
+        </div>
 
+        <div className='admin-menu-list'>
           <div className="admin-service admin-coffee-product">
             {products.map(p => {
               const imageSrc =

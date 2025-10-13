@@ -48,11 +48,13 @@ const [products, setProducts] = useState([]);
           <AdminHeader />
         </div>
 
+        <div className="admin-title">
+          <h3>판매 현황</h3>
+          <p>카페 메뉴를 추가, 편집, 삭제할 수 있습니다.</p>
+        </div>
+
+
         <div className='admin-menu-list'>
-          <div className="admin-title">
-            <h3>판매 현황</h3>
-            <p>카페 메뉴를 추가, 편집, 삭제할 수 있습니다.</p>
-          </div>
 
           <div className="admin-service">
 
