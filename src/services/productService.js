@@ -5,7 +5,7 @@ export async function getProducts() {
   const { data, error } = await supabase
     .from('products')
     .select('*')
-    .in('imageclass', ['coffee', 'latte', 'bean', 'barista', 'more']);
+    .in('imageclass', ['coffee', 'latte', 'bean', 'barista', 'grain', 'other']);
 
   if (error) {
     console.error("getProducts error:", error.message);
@@ -98,10 +98,7 @@ export async function updateBaristaProduct(id, updates) {
     .from('barista_products')
     .update(updates)
     .eq('id', id);
-  if (error) {
-    console.error("updateProduct error:", error.message);
-    throw error;
-  }
+  if (error) throw error;
   return data;
 }
 

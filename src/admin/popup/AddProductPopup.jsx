@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { 
-  addProduct, 
-  updateProduct, 
-  addBaristaProduct, 
-  updateBaristaProduct } from "../../services/productService";
+import {
+  addProduct,
+  updateProduct
+} from "../../services/productService";
 import ImageUploader from '../../components/ImageUploader';
 
 function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
@@ -18,42 +17,25 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
     is_sale: false,
     is_new: false,
     image: "",
+    rating: 0,  //별점추가
   });
 
   useEffect(() => {
     if (isEdit && product) {
-      let categoryValue = "more";
-
-      switch (product.imageclass){
-        case "coffee" :
-          categoryValue = "coffee";
-          break;
-        case "latte" :
-          categoryValue = "latte";
-          break;
-        case "bean" :
-          categoryValue = "bean";
-          break;
-        case "barista" :
-          categoryValue = "barista";
-          break;
-        default:
-          categoryValue = "more";
-      }
-
       setForm({
         name: product.name || "",
         price: product.price || "",
         stock: product.stock || "",
         description: product.description || "",
-        imageclass: product.imageclass || "more",
+        imageclass: product.imageclass || "other",
         is_best: product.is_best || false,
         is_sale: product.is_sale || false,
         is_new: product.is_new || false,
         image: product.image || "",
+        rating : product.rating || 0, //기존 별점 불러오기
       });
-
-  }}, [isEdit, product]);
+    }
+  }, [isEdit, product]);
 
 
   const handleChange = e => {
@@ -70,12 +52,12 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
     setForm((prev) => ({ ...prev, image: fileName }));
   };
 
+  const handleRatingChange = (value) => {
+    setForm((prev) => ({ ...prev, rating: value}));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const cleanedTags = form.tags?.trim()
-      ? form.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== "")
-      : [];
 
     const productData = {
       ...form,
@@ -85,16 +67,9 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
     };
 
     try {
-      let savedProduct;
-      if (form.imageclass === "coffee" || form.imageclass === "latte") {
-        savedProduct = isEdit
-          ? await updateProduct(product.id, productData)
-          : await addProduct(productData);
-      } else {
-        savedProduct = isEdit
-          ? await updateBaristaProduct(product.id, productData)
-          : await addBaristaProduct(productData);
-      }
+      const savedProduct = isEdit
+        ? await updateProduct(product.id, productData)
+        : await addProduct(productData);
 
       if (!isEdit && savedProduct?.id) {
         setProductId(savedProduct.id);
@@ -134,18 +109,30 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
           <select className="select" name="imageclass" value={form.imageclass} onChange={handleChange}>
             <option value="coffee">커피</option>
             <option value="latte">라떼</option>
-            <option value="bean">원두</option>
-            <option value="barista">바리스타 용품</option>
-            <option value="more">기타 메뉴</option>
+            <option value="grain">곡물라떼</option>
+            <option value="other">그외 음료</option>
           </select>
 
           <input name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
           <input name="price" placeholder="가격" value={form.price} onChange={handleChange} required />
           <input name="stock" placeholder="재고" value={form.stock} onChange={handleChange} required />
-          <input name="description" placeholder="설명" value={form.description} onChange={handleChange} />
+          <textarea name="description" placeholder="설명" value={form.description} onChange={handleChange} required />
           
-          {/* 토글 버튼 */}
+          {/* 별점 선택 */}
+          <label>별점</label>
+          <div className="rating-select">
+            <p>별점표시 : </p>
+            {[1, 2, 3, 4, 5].map((num) => (
+              <span
+                key={num}
+                className={`fa fa-star ${form.rating >= num ? "checked" : ""}`}
+                onClick={() => handleRatingChange(num)}
+                style={{ cursor: "pointer" }}
+              ></span>
+            ))}
+          </div>
 
+          {/* 토글 버튼 */}
           <div className="menu-btn toggle-buttons">
             <button
               type="button"

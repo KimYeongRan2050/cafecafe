@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
-import { 
-  getProducts, 
-  addProduct, 
-  updateProduct, 
-  deleteProduct, 
-  getBaristaProducts 
+import {
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct
 } from "../../services/productService";
 import AddProductPopup from "../popup/AddProductPopup";
 import { getProductImageUrl } from "../../services/productImage";
@@ -17,17 +16,27 @@ function ProductManage() {
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadProducts();
   }, []);
 
   const loadProducts = async () => {
-    const productList = await getProducts(); // coffee, latte
-    
-    const combined = [...productList];
-    const sorted = combined.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    setProducts(sorted);
+    setLoading(true);
+    try {
+      const productList = await getProducts();
+
+      const coffeeItems = productList.filter(p => (p.imageclass || "").toLowerCase() === "coffee");
+      const latteItems = productList.filter(p => (p.imageclass || "").toLowerCase() === "latte");
+      const grainItems = productList.filter(p => (p.imageclass || "").toLowerCase() === "grain");
+      const otherItems = productList.filter(p => (p.imageclass || "").toLowerCase() === "other");
+
+      const sorted = [...coffeeItems, ...latteItems, ...grainItems, ...otherItems];
+      setProducts(sorted);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddClick = () => {
@@ -46,10 +55,11 @@ function ProductManage() {
   };
 
   const handleDelete = async (id) => {
-    await deleteProduct(id);
-    await loadProducts();
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      await deleteProduct(id);
+      await loadProducts();
+    }
   };
-
 
   const navigate = useNavigate();
   const goToHome = () => {
@@ -58,13 +68,9 @@ function ProductManage() {
 
   return(
     <div className="admin-board">
-      <div className="admin-left">
-        <Sidebar />
-      </div>
+      <div className="admin-left"><Sidebar /></div>
       <div className="admin-right">
-        <div className="admin-header">
-          <AdminHeader />
-        </div>
+        <div className="admin-header"><AdminHeader /></div>
 
         <div className="admin-title">
           <h3>메뉴 관리</h3>
@@ -76,9 +82,15 @@ function ProductManage() {
 
         <div className='admin-menu-list'>
           <div className="admin-service admin-coffee-product">
-            {products.map(p => {
+          {loading ? (
+            <p>로딩 중...</p>
+          ) : (
+            products.map(p => {
               const imageSrc =
-                p.image && typeof p.image === "string" && p.image.trim() !== "" && p.image !== "null" && p.image !== "undefined"
+                p.image && typeof p.image === "string" &&
+                p.image.trim() !== "" &&
+                p.image !== "null" &&
+                p.image !== "undefined"
                   ? getProductImageUrl(p.image)
                   : getProductImageUrl("default.png");
 
@@ -123,15 +135,17 @@ function ProductManage() {
                   </div>
 
                   <div className='main_txt'>
-                    <div className='star four'>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star"></span>
+                    <div className='rating-select star-rating'>
+                      {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className={`fa fa-star ${i < p.rating ? "checked" : ""}`}
+                      ></span>
+                    ))}
                     </div>
 
                     <h4>{p.name}</h4>
+
                     <p>{p.description}</p>
                     <div className='price'>{p.price}원</div>
 
@@ -141,8 +155,9 @@ function ProductManage() {
                     </div>
                   </div>
                 </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
 
           {showAddPopup && (

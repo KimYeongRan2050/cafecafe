@@ -9,19 +9,19 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
   // 로딩/에러 상태 추가
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [baristaProducts, setBaristaProducts] = useState([]);
+
+  // 매장 전용 팝업 상태
+  const [showStoreOnlyPopup, setShowStoreOnlyPopup] = useState(false);
+  const [storeOnlyItem, setStoreOnlyItem] = useState(null);  
 
   useEffect(() => {
     async function fetchData() {
       try {
         const productData = await getProducts();
-        const sortedProducts = productData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        setProducts(sortedProducts);
-
         const baristaData = await getBaristaProducts();
-        const sortedBarista = baristaData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        setBaristaProducts(sortedBarista);
+        const combined = [...productData, ...baristaData];
 
+        setProducts(combined);
         setLoading(false);
       } catch (err) {
         console.error("데이터 로딩 실패:", err);
@@ -33,7 +33,19 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
     fetchData();
   }, []);
 
-  const handleAddToCart = (product) => {
+  //커피&라떼 제품 판별
+  const isStoreOnly = (product) => {
+    const category = (product.imageclass || product.imageclass || "").toLowerCase();
+    return category === "coffee" || category === "latte";
+  };
+
+    const handleAddToCart = (product) => {
+      if (isStoreOnly(product)){
+        setStoreOnlyItem(product);
+        setShowStoreOnlyPopup(true);
+        return; // 장바구니 추가 방지
+      }
+
     setCart(prevCart => {
       const exists = prevCart.find(item => item.id === product.id);
       if (exists) {
@@ -62,16 +74,39 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
     });
   };
 
-  // 카테고리별 필터링 (안전 처리: description, imageClass가 없을 경우 대비)
-  const coffeeProducts = products.filter(
-    p => p.description && 
-    !p.description.includes('g') && 
-    !(p.imageclass || '').includes('latte') &&
-    !(p.imageclass || '').includes('barista')
-  );
-  const latteProducts = products.filter(
-    p => (p.imageclass || '').includes('latte')
-  );
+  const closeStoreOnlyPopup = () => {
+    setShowStoreOnlyPopup(false);
+    setStoreOnlyItem(null);
+  };
+
+
+  // 카테고리별 필터링
+  const beanProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "bean");
+  const baristaProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "barista");
+  const moreProducts = products.filter(p => {
+    const cls = (p.imageclass || p.imageClass || "").toLowerCase();
+    return cls !== "bean" && cls !== "barista" && cls !== "coffee" && cls !== "latte" && cls !== "grain" && cls !== "other";
+  });
+  const coffeeProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "coffee");
+  const latteProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "latte");
+  const otherProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "other");
+
+useEffect(() => {
+  if (showStoreOnlyPopup) {
+    const scrollY = window.scrollY;
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${scrollY}px;
+      overflow-y: scroll;
+      width: 100%;
+    `;
+    return () => {
+      document.body.style.cssText = '';
+      window.scrollTo(0, scrollY);
+    };
+  }
+}, [showStoreOnlyPopup]);
+
 
   return (
     <div className='main'>
@@ -83,9 +118,50 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
 
         {!loading && !error && (
           <>
-            <h2 id='coffeeSection'>엄선된 원두와 정성스러운 로스팅으로 만든 프리미엄 커피</h2>
+            <h2 id='beanSection'>엄선된 원두로 직접 정성스러운 로스팅한 원두</h2>
             <div className='menu_coffee_full'>
               <div className="coffee_product">
+                {beanProducts.length > 0 ? (
+                  beanProducts.map(p => (
+                    <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                  ))
+                ) : (
+                  <p>원두 상품이 없습니다.</p>
+                )}
+              </div>
+            </div>
+
+            <h2 id='cafereumSection'>장비 하나로 나도 바리스타</h2>
+            <div className='menu_coffee_full'>
+              <div className="coffee_product">
+                  {baristaProducts.length > 0 ? (
+                    baristaProducts.map(p => (
+                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                    ))
+                  ) : (
+                    <p>바리스타 상품이 없습니다.</p>
+                  )}
+              </div>
+            </div>
+
+            <h2 id='otherSection'>그외의 상품</h2>
+            <div className='menu_coffee_full'>
+              <div className="coffee_product">
+                {moreProducts.length > 0 ? (
+                  moreProducts.map(p => (
+                    <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                  ))
+                ) : (
+                  <p>그외 상품이 없습니다.</p>
+                )}
+              </div>
+            </div>
+
+            <div className='store-drink'>
+              <h4>[매장 전용 음료]</h4>
+              <h2 id='storeCoffeeSection'>엄선된 원두로 정성스러운 로스팅으로 만든 프리미엄 커피</h2>
+              <div className='menu_coffee_full'>
+                <div className="coffee_product">
                   {coffeeProducts.length > 0 ? (
                     coffeeProducts.map(p => (
                       <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
@@ -93,34 +169,37 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
                   ) : (
                     <p>커피 상품이 없습니다.</p>
                   )}
+                </div>
               </div>
+
+              <h2 id='storeLatteSection'>부드러운 우유거품과 달콤한 바닐라 시럽의 완벽한 조화</h2>
+              <div className='menu_coffee_full'>
+                <div className="coffee_product">
+                  {latteProducts.length > 0 ? (
+                    latteProducts.map(p => (
+                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                    ))
+                  ) : (
+                    <p>라떼&곡물 상품이 없습니다.</p>
+                  )}
+                </div>
+              </div>
+
+              <h2 id='storeLatteSection'>우리 아이들도 한잔씩 </h2>
+              <div className='menu_coffee_full'>
+                <div className="coffee_product">
+                  {otherProducts.length > 0 ? (
+                    otherProducts.map(p => (
+                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                    ))
+                  ) : (
+                    <p>상품이 없습니다.</p>
+                  )}
+                </div>
+              </div>
+
             </div>
 
-            <h2 id='latteSection'>부드러운 우유거품과 달콤한 바닐라 시럽의 완벽한 조화</h2>
-            <div className='menu_coffee_full'>
-              <div className="coffee_product">
-                {latteProducts.length > 0 ? (
-                  latteProducts.map(p => (
-                    <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
-                  ))
-                ) : (
-                  <p>라떼 상품이 없습니다.</p>
-                )}
-              </div>
-            </div>
-
-            <h2 id='cafereumSection'>최고급 원두부터 전문 바리스타 장비까지</h2>
-            <div className='menu_coffee_full'>
-              <div className="coffee_product">
-                {baristaProducts.length > 0 ? (
-                  baristaProducts.map(p => (
-                    <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
-                  ))
-                ) : (
-                  <p>바리스타 상품이 없습니다.</p>
-                )}
-              </div>
-            </div>
           </>
         )}
 
@@ -132,6 +211,23 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
       <div className='footer'>
         <Footer />
       </div>
+
+      {/* 매장 전용 안내 팝업 */}
+      {showStoreOnlyPopup && storeOnlyItem && (
+        <div className="popup-overlay">
+          <div className="popup-message">
+            <div className="popup-message">
+              <h3>매장 전용 상품 안내</h3>
+
+              <p className='popup-txt'>
+                <strong>{storeOnlyItem.name}</strong>은 매장에서만 구매 가능한 상품입니다.
+              </p>
+
+            </div>
+            <button onClick={closeStoreOnlyPopup} className='close-btn'>닫기</button>
+          </div>
+        </div>
+      )}
 
     </div>
 

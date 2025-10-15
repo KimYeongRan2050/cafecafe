@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminHeader from "../components/AdminHeader";
 import { 
-  getBaristaProducts, 
-  addBaristaProduct, 
-  updateBaristaProduct, 
-  deleteBaristaProduct 
+  getBaristaProducts,
+  addBaristaProduct,
+  updateBaristaProduct,
+  deleteBaristaProduct
 } from "../../services/productService";
 import AddOrderPopup from "../popup/AddOrderPopup";
 import { getProductImageUrl } from "../../services/productImage";
@@ -24,8 +24,14 @@ function OrderManage() {
   const loadProducts = async () => {
     const baristaList = await getBaristaProducts();
 
-    const combined = [...baristaList];
-    const sorted = combined.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const beanItems = baristaList.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "bean");
+    const baristaItems = baristaList.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "barista");
+    const otherItems = baristaList.filter(p => {
+      const cls = (p.imageclass || p.imageClass || "").toLowerCase();
+      return cls !== "bean" && cls !== "barista";
+    });
+
+    const sorted = [...beanItems, ...baristaItems, ...otherItems];
     setProducts(sorted);
   };
 
@@ -121,15 +127,35 @@ function OrderManage() {
                   </div>
 
                   <div className='main_txt'>
-                    <div className='star four'>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star checked"></span>
-                      <span className="fa fa-star"></span>
+                    <div className='rating-select star-rating'>
+                      {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className={`fa fa-star ${i < product.rating ? "checked" : ""}`}
+                      ></span>
+                    ))}
                     </div>
 
-                    <h4>{product.name}</h4>
+                    <h4 className="product-name">{product.name}</h4>
+                    
+                    <div className="option-area">
+                      <div
+                        className={`option-btn ${((product.imageclass || product.imageClass || "" ).toLowerCase() === "barista") ? "empty-option" : ""}`}
+                      >
+                        {((product.imageclass || product.imageClass || "").toLowerCase() !== "barista")
+                          ? (product.option || "옵션 없음")
+                          : "\u00A0"}
+                      </div>
+
+                        {product.quantity && (
+                          <div className="option-btn">
+                            <span>{product.quantity}</span>
+                          </div>
+                        )}
+
+
+                    </div>
+
                     <p>{product.description}</p>
                     <div className='price'>{product.price}원</div>
 

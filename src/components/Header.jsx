@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link as ScrollLink } from 'react-scroll';
-import Cart from "../pages/Cart"; // Assuming Cart is a component in the same directory
+import Cart from "../pages/Cart";
 import LoginPopup from "../pages/LoginPopup";
 import Signup from "../pages/Signup";
 import AdminLoginPopup from "../admin/popup/AdminLoginPopup";
@@ -37,10 +37,15 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
   // 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.target) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target)
+    ) {
+      setIsMenuOpen(false);
+    }
+  };
 
     document.addEventListener("mousedown", handleClickOutside); // 이벤트 타입 수정
 
@@ -59,10 +64,12 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
         </div>
 
         <nav>
-          <div><ScrollLink to="coffeeSection" smooth={true} duration={500} offset={-160}>커피</ScrollLink></div>
-          <div><ScrollLink to="latteSection" smooth={true} duration={500} offset={-160}>라떼&곡물</ScrollLink></div>
+          <div><ScrollLink to="beanSection" smooth={true} duration={500} offset={-160}>원두</ScrollLink></div>
           <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-160}>카페리움</ScrollLink></div>
-          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-160}>스토어</ScrollLink></div>
+          <div><ScrollLink to="otherSection" smooth={true} duration={500} offset={-160}>그외 상품</ScrollLink></div>
+          <div><ScrollLink to="storeCoffeeSection" smooth={true} duration={500} offset={-160}>커피음료</ScrollLink></div>
+          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-160}>라떼&곡물음료</ScrollLink></div>
+          <div><ScrollLink to="storeLatteSection" smooth={true} duration={500} offset={-160}>스토어</ScrollLink></div>
         </nav>
 
         <div className='top_user'>
@@ -123,10 +130,12 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
         {/* 메뉴리스트 */}
         <div className={`mobile_menu_list ${isMenuOpen ? "open" : "close"}`} ref={menuRef}>
           <div className="mobile_menu_product" id="menuLinks">
-            <div><ScrollLink to="coffeeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>커피</ScrollLink></div>
-          <div><ScrollLink to="latteSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>라떼&곡물</ScrollLink></div>
-          <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>카페리움</ScrollLink></div>
-          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>스토어</ScrollLink></div>
+            <div><ScrollLink to="beanSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>원두</ScrollLink></div>
+            <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>카페리움</ScrollLink></div>
+            <div><ScrollLink to="otherSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>그외 상품</ScrollLink></div>
+            <div><ScrollLink to="storeCoffeeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>커피</ScrollLink></div>
+            <div><ScrollLink to="storeLatteSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>라떼&곡물</ScrollLink></div>
+            <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>스토어</ScrollLink></div>
           </div>
 
           <div className="mobile_user">

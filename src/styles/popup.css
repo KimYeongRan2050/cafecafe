@@ -7,28 +7,28 @@
   align-items: center;
   justify-content: center;
 }
-.popup-content {
+.popup-content, .popup-message {
   background: #fff;
   padding: 32px 24px;
   border-radius: 12px;
   min-width: 320px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
-.popup-content h3 {
-  margin-bottom: 18px;
+.popup-content h3, .popup-message h3{
+  margin-bottom: 20px;
   color: #c35930;
 }
 .popup-content input {
   display: block;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ddd;
   box-sizing: border-box;
 }
-.popup-content button {
-  margin-top: 8px;
+.popup-content button, .popup-message button{
+  margin-top: 10px;
   padding: 8px 16px;
   border-radius: 6px;
   border: none;
@@ -45,6 +45,10 @@
 .popup-overlay .close-btn {
   margin-top: 30px;
 }
+.popup-overlay .close-btn:hover{
+  background: #a54c28;
+}
+
 
 .popup-content label{
   display: none;
@@ -52,6 +56,7 @@
 .popup-content p{
   color: #333;
 }
+
 .select{
   display: block;
   width: 100%;
@@ -60,4 +65,116 @@
   border-radius: 6px;
   color: #828282;
   border: 1px solid #ddd;
+}
+
+/* 바리스타 용품 옵션 */
+.unit-buttons{
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+  grid-template-columns: repeat(4, 1fr);
+}
+.unit-buttons button {
+  font-size: 12px;
+  padding: 5px 0;
+  margin-top: 0;
+  border: 1px solid #ccc;
+  background: #c35930;
+  cursor: pointer;
+}
+.unit-buttons button.active {
+  background: #4caf50;
+  color: white;
+  border-color: #148b18;
+}
+
+.quantity-buttons{
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  background: #eee;
+  padding: 20px;
+}
+.quantity-buttons button{
+  margin-top: 0;
+  font-size: 12px;
+  padding: 5px 0;
+}
+.quantity-buttons button.active {
+  background: #4caf50;
+  color: white;
+  border-color: #148b18;
+}
+textarea{
+  width: 100%;
+  height: 100px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #777;
+  box-sizing: border-box;
+  resize: none;
+}
+
+/* 별점 표시 */
+.rating-select{
+  display: flex;
+  align-items: center;
+  padding: 10px 0 10px;
+}
+.rating-select p{
+  color: #333;
+  margin-right: 10px;
+  margin-top: 0;
+}
+.rating-select span{
+  margin-left: 5px;
+}
+.rating-select span:first-child{
+  margin-left: 0;
+}
+.rating-select.star-rating{
+  padding: 0 0 10px;
+}
+
+.fa-star {
+  color: #ccc;
+}
+.fa-star.checked {
+  color: orange;
+}
+
+.menu-btn{
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+  padding: 6px 12px;
+  background: #dbdbdb;
+  border: 1px solid #ccc;
+  color: #adadad;
+  cursor: pointer;
+}
+
+.toggle-buttons button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+
+/* 매장메세지 */
+.popup-message strong{
+  display: inline-block;
+  background: #c35930;
+  color: #fff;
+  padding: 10px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+.popup-message p{
+  color: #333;
 }
