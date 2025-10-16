@@ -48,6 +48,10 @@
 .popup-overlay .close-btn:hover{
   background: #a54c28;
 }
+.popup-overlay .close-btn.kakaoBtn {
+  margin-top: 10px;
+}
+
 
 
 .popup-content label{
@@ -177,4 +181,17 @@ textarea{
 }
 .popup-message p{
   color: #333;
+}
+
+/* modal */
+.modal{
+  margin-top: 30px;
+}
+.modal p{
+  text-align: center;
+  margin-bottom: 20px;
+}
+.modal-btn{
+  display: flex;
+  gap: 10px;
 }
