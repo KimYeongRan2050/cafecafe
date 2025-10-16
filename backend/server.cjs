@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// 결제 관련 라우터 연결
 const paymentRoutes = require('./services/payment');
 app.use('/', paymentRoutes);
 
