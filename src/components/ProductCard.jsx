@@ -23,7 +23,7 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
   const showOptionAndQuantity = imageClass === "bean" || imageClass === "more";
 
   return (
-    <div className="main_coffee main_stars">
+    <div className="main_coffee">
       {/* 이미지처리 */}
       <div className="main_img">
         <img

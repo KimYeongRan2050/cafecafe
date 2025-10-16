@@ -9,14 +9,12 @@ import { supabase } from './services/supabaseClient.js';
 import { AdminAuthProvider } from './context/AdminAuthContext.jsx';
 
 //카카오페이 추가
-import Cart from './pages/Cart.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import OrderComplete from './pages/OrderComplete.jsx';
 
 
 function App() {
   const [userInfo, setUserInfo] = useState(null);
-  const [members, setMembers] = useState([]);
   const [cart, setCart] = useState([]);
   const [showCartPopup, setShowCartPopup] = useState(false);
 
@@ -65,7 +63,7 @@ function App() {
         <Route path="/*" element={<MainRoutes onLogin={handleLogin} />} />
 
         {/* 결제 성공 후 주문 저장 및 재고 차감 */}
-        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/pay/success" element={<PaymentSuccess />} />
 
         {/* 주문 완료 페이지 */}
         <Route path="/order/complete" element={<OrderComplete  />} />

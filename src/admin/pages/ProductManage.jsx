@@ -109,7 +109,7 @@ function ProductManage() {
               const tags = [...baseTags, ...booleanTags];
 
               return (
-                <div className='main_coffee main_stars' key={p.id}>
+                <div className='main_coffee' key={p.id}>
 
                   <div className="main_img"> 
                     <img 

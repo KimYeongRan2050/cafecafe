@@ -35,16 +35,16 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
 
   //커피&라떼 제품 판별
   const isStoreOnly = (product) => {
-    const category = (product.imageclass || product.imageclass || "").toLowerCase();
-    return category === "coffee" || category === "latte";
+    const category = (product.imageclass || "").toLowerCase();
+    return category === "coffee" || category === "latte" || category === "grain" || category === "other";
   };
 
-    const handleAddToCart = (product) => {
-      if (isStoreOnly(product)){
-        setStoreOnlyItem(product);
-        setShowStoreOnlyPopup(true);
-        return; // 장바구니 추가 방지
-      }
+  const handleAddToCart = (product) => {
+    if (isStoreOnly(product)){
+      setStoreOnlyItem(product);
+      setShowStoreOnlyPopup(true);
+      return; // 장바구니 추가 방지
+    }
 
     setCart(prevCart => {
       const exists = prevCart.find(item => item.id === product.id);
@@ -81,15 +81,16 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
 
 
   // 카테고리별 필터링
-  const beanProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "bean");
-  const baristaProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "barista");
+  const beanProducts = products.filter(p => (p.imageclass || "").toLowerCase() === "bean");
+  const baristaProducts = products.filter(p => (p.imageclass || "").toLowerCase() === "barista");
   const moreProducts = products.filter(p => {
-    const cls = (p.imageclass || p.imageClass || "").toLowerCase();
+    const cls = (p.imageclass || "").toLowerCase();
     return cls !== "bean" && cls !== "barista" && cls !== "coffee" && cls !== "latte" && cls !== "grain" && cls !== "other";
   });
-  const coffeeProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "coffee");
-  const latteProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "latte");
-  const otherProducts = products.filter(p => (p.imageclass || p.imageClass || "").toLowerCase() === "other");
+  const coffeeProducts = products.filter(p => (p.imageclass || "").toLowerCase() === "coffee");
+  const latteProducts = products.filter(p => (p.imageclass || "").toLowerCase() === "latte");
+  const grainProducts = products.filter(p => (p.imageclass || "").toLowerCase() === "grain");
+  const otherProducts = products.filter(p => (p.imageclass || "").toLowerCase() === "other");
 
 useEffect(() => {
   if (showStoreOnlyPopup) {
@@ -113,8 +114,8 @@ useEffect(() => {
       
       <div className='container'>
         {/* 로딩/에러 처리 */}
-        {loading && <p style={{ marginTop: "100px", fontSize:"24px", color:"#c35930" }}>상품을 불러오는 중입니다...</p>}
-        {error && <p style={{ marginTop: "100px", fontSize:"24px", color: 'red' }}>{error}</p>}
+        {loading && <p style={{ margin: "100px", fontSize:"24px", color:"#c35930" }}>상품을 불러오는 중입니다...</p>}
+        {error && <p style={{ margin: "100px", fontSize:"24px", color: 'red' }}>{error}</p>}
 
         {!loading && !error && (
           <>
@@ -180,12 +181,12 @@ useEffect(() => {
                       <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                     ))
                   ) : (
-                    <p>라떼&곡물 상품이 없습니다.</p>
+                    <p>라떼 상품이 없습니다.</p>
                   )}
                 </div>
               </div>
 
-              <h2 id='storeLatteSection'>우리 아이들도 한잔씩 </h2>
+              <h2 id='storeChildrenSection'>우리 아이들도 한잔씩 </h2>
               <div className='menu_coffee_full'>
                 <div className="coffee_product">
                   {otherProducts.length > 0 ? (

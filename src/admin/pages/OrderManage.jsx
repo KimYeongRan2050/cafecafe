@@ -101,13 +101,13 @@ function OrderManage() {
               const tags = [...baseTags, ...booleanTags];
 
               return (
-                <div className='main_coffee main_stars' key={product.id}>
+                <div className='main_coffee' key={product.id}>
 
-                  <div className="main_img"> 
+                  <div className="main_img">
                     <img 
-                      className="product-image" 
+                      className="product-image"
                       src={imageSrc} 
-                      alt={product.name} /> 
+                      alt={product.name} />
                   </div>
 
                   <div className="coffee black">

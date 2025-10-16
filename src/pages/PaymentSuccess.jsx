@@ -1,62 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { supabase } from "../services/supabaseClient";
-import { getProductById } from "../services/productService";
+import React, { useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function PaymentSuccess() {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [status, setStatus] = useState("결제 처리 중...");
 
   useEffect(() => {
-    async function processOrder() {
-      try {
-        const cart = location.state?.cart;
-        if (!cart || cart.length === 0) {
-          setStatus("장바구니 정보가 없습니다.");
-          return;
-        }
+    const orderId = searchParams.get('order_id');
+    const pgToken = searchParams.get('pg_token');
 
-        for (const item of cart) {
-          const { data: product } = await supabase
-            .from("products")
-            .select("*")
-            .eq("id", item.id)
-            .single();
-
-          if (!product || product.stock < item.quantity) {
-            setStatus(`${item.name} 재고 부족`);
-            return;
-          }
-
-          await supabase.from("orders").insert([{
-            product_id: item.id,
-            quantity: item.quantity,
-            total_price: item.price * item.quantity,
-            created_at: new Date().toISOString()
-          }]);
-
-          await supabase
-            .from("products")
-            .update({ stock: product.stock - item.quantity })
-            .eq("id", item.id);
-        }
-
-        setStatus("주문이 완료되었습니다.");
-        setTimeout(() => navigate("/order/complete"), 2000);
-      } catch (err) {
-        console.error("결제 처리 오류:", err);
-        setStatus("처리 중 오류 발생");
+    const confirmPayment = async () => {
+      if (!orderId || !pgToken) {
+        alert('결제 정보가 유효하지 않습니다.');
+        return;
       }
-    }
 
-    processOrder();
-  }, [navigate, location]);
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/pay/success?order_id=${orderId}&pg_token=${pgToken}`
+        );
+
+        // 결제 승인 성공 시 주문 완료 페이지로 이동
+        navigate('/order/complete');
+      } catch (error) {
+        console.error('결제 승인 실패:', error.response?.data || error.message);
+        alert('결제 승인에 실패했습니다. 다시 시도해주세요.');
+      }
+    };
+
+    confirmPayment();
+  }, [searchParams, navigate]);
 
   return (
     <div className="payment-success">
-      <h2>카카오페이 결제 완료</h2>
-      <p>{status}</p>
+      <h2 style={{ margin: "50px 0", fontSize: "24px", color: "#c35930" }}>
+        결제 승인 중입니다...
+      </h2>
+      <p>잠시만 기다려주세요. 주문을 처리하고 있습니다.</p>
     </div>
   );
 }

@@ -15,6 +15,7 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
   const [showTestUserFlowPopup, setShowTestUserFlowPopup] = useState(false);
 
   const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   //메뉴 토글 함수
   const handleMenuClick = () => {
@@ -54,6 +55,14 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    const savedId = localStorage.getItem("custom_id");
+    const saveName = localStorage.getItem("user_name");
+    if (savedId && saveName) {
+      setUserInfo({id:savedId, name: saveName});
+    }
+  }, []);
+
   const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return(
@@ -68,8 +77,8 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
           <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-160}>카페리움</ScrollLink></div>
           <div><ScrollLink to="otherSection" smooth={true} duration={500} offset={-160}>그외 상품</ScrollLink></div>
           <div><ScrollLink to="storeCoffeeSection" smooth={true} duration={500} offset={-160}>커피음료</ScrollLink></div>
-          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-160}>라떼&곡물음료</ScrollLink></div>
-          <div><ScrollLink to="storeLatteSection" smooth={true} duration={500} offset={-160}>스토어</ScrollLink></div>
+          <div><ScrollLink to="storeLatteSection" smooth={true} duration={500} offset={-160}>라떼&곡물음료</ScrollLink></div>
+          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-160}>스토어</ScrollLink></div>
         </nav>
 
         <div className='top_user'>
@@ -108,7 +117,10 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
           </div>
           <div className="login_btn">
             {userInfo ? (
-              <button onClick={() => setUserInfo(null)}>로그아웃</button>
+              <button onClick={() => {
+                setUserInfo(null);
+                localStorage.removeItem('custom_id');
+              }}>로그아웃</button>
             ) : (
               <button onClick={handleLoginClick}>
                 <i className="bi bi-person-fill"></i>
@@ -118,7 +130,7 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
           </div>
           {/* 모바일 메뉴버튼 */}
           <div className="icon_btn">
-            <button className="icon" onClick={handleMenuClick}>
+            <button className="icon" onClick={handleMenuClick} ref={buttonRef}>
               <i className="fa fa-bars"></i>
             </button>
           </div>
@@ -142,7 +154,11 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
             <div className="login_btn">
               {userInfo ? (
                 <>
-                  <button onClick={() => setUserInfo(null)}>로그아웃</button>
+                  <button onClick={() => {
+                    setUserInfo(null);
+                    localStorage.removeItem('custom_id');
+                    setIsMenuOpen(false);
+                  }}>로그아웃</button>
                 </>
               ) : (
                 <button onClick={handleLoginClick}>
@@ -169,7 +185,11 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
       {showCartPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <Cart cart={cart} setCart={setCart} />
+            <Cart
+              cart={cart}
+              setCart={setCart}
+              openLoginPopup={() => setShowLoginPopup(true)}
+            />
             <button className="close-btn" onClick={() => setShowCartPopup(false)}>닫기</button>
           </div>
         </div>

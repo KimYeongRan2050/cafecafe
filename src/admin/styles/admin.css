@@ -261,7 +261,7 @@ p{
   padding: 5px 10px;
 }
 .admin-coffee-product{
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 
 /* 바리스타 용품 관리 */

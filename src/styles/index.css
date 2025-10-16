@@ -258,6 +258,7 @@ nav div{
   position: relative;
   border: 1px solid #ddd;
   border-radius: 20px;
+  background: #333;
 }
 
 .coffee_product,
@@ -289,11 +290,8 @@ nav div{
   top: 0px;
 }
 
-
-
 .main_txt{
-  padding: 20px 25px 20px 25px;
-  background: #333;
+  padding: 20px 20px 20px 20px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
@@ -584,6 +582,13 @@ color: #333;
   height: 50px;
 }
 
+/* 결제 승인 중 */
+.payment-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 
 /* Desktop(데스크탑) 규격 */
 @media screen and (max-width: 1700px) {
@@ -680,7 +685,7 @@ color: #333;
     grid-template-columns: 1fr;
   }
   .container h2{
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin: 50px 0;
   }
   .logo_img{
@@ -695,6 +700,3 @@ color: #333;
     font-size: 1rem;
   }
 }
-
-
-

@@ -10,6 +10,9 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
     if (typeof onLogin === "function") {
       const result = await onLogin(id, pw);
       if (result) {
+        localStorage.setItem("custom_id", result.id);
+        localStorage.setItem("user_name", result.name);
+        localStorage.setItem("user_id", result.uuid);
         if (typeof onLoginSuccess === "function") {
           onLoginSuccess(result);
         }
