@@ -1,3 +1,4 @@
+// services/paymentService.js
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config({ path: '.env.local' });
@@ -18,6 +19,7 @@ async function preparePayment({ productId, productName, quantity, price, table, 
 
   const orderId = `order_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
+  // 카카오페이 결제 준비 요청
   const response = await axios.post(
     'https://kapi.kakao.com/v1/payment/ready',
     new URLSearchParams({
@@ -41,6 +43,7 @@ async function preparePayment({ productId, productName, quantity, price, table, 
     }
   );
 
+  // 주문 데이터 저장
   const { error: insertError } = await supabase.from('orders').insert([
     {
       order_id: orderId,
@@ -57,23 +60,37 @@ async function preparePayment({ productId, productName, quantity, price, table, 
     },
   ]);
 
-  if (insertError) throw new Error('주문 저장 실패');
+  if (insertError) throw new Error('주문 저장 실패: ' + insertError.message);
 
   return { redirectUrl: response.data.next_redirect_pc_url };
 }
 
 async function approvePayment(orderId, pgToken) {
+  console.log('🟢 approvePayment() 시작', orderId, pgToken);
+
   const { data, error: fetchError } = await supabase
     .from('orders')
     .select('*')
     .eq('order_id', orderId)
     .limit(1);
 
+  if (fetchError) {
+    console.error('❌ 주문 조회 에러:', fetchError);
+    throw new Error('주문 조회 중 오류 발생');
+  }
+
   const order = data?.[0];
-  if (fetchError || !order) throw new Error('주문 정보가 유실되었습니다.');
+  if (!order) {
+    console.error('❌ 주문 데이터 없음:', orderId);
+    throw new Error('주문 정보가 유실되었습니다.');
+  }
 
-  if (order.status === 'completed') return { alreadyApproved: true };
+  if (order.status === 'completed') {
+    console.log('이미 승인 완료된 주문입니다.');
+    return { alreadyApproved: true };
+  }
 
+  // 카카오페이 결제 승인 요청
   try {
     await axios.post(
       'https://kapi.kakao.com/v1/payment/approve',
@@ -92,11 +109,11 @@ async function approvePayment(orderId, pgToken) {
       }
     );
   } catch (error) {
-    const errCode = error.response?.data?.code;
-    if (errCode === -702) return { alreadyApproved: true };
+    console.error('❌ 카카오페이 승인 실패:', error.response?.data || error.message);
     throw new Error('카카오페이 승인 실패');
   }
 
+  // 재고 감소 처리
   const { data: productData, error: stockError } = await supabase
     .from(order.source_table)
     .select('stock')
@@ -119,6 +136,7 @@ async function approvePayment(orderId, pgToken) {
     .update({ status: 'completed' })
     .eq('order_id', order.order_id);
 
+  console.log('✅ 결제 승인 및 재고 업데이트 완료');
   return { success: true };
 }
 

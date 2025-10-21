@@ -1,31 +1,32 @@
-import React, { useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function PaymentSuccess() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const orderId = searchParams.get('order_id');
-    const pgToken = searchParams.get('pg_token');
+    const orderId = searchParams.get("order_id");
+    const pgToken = searchParams.get("pg_token");
 
     const confirmPayment = async () => {
       if (!orderId || !pgToken) {
-        alert('결제 정보가 유효하지 않습니다.');
+        alert("결제 정보가 유효하지 않습니다.");
         return;
       }
 
       try {
+        // ✅ 반드시 /api/pay/success 로 요청해야 함!
         const response = await axios.get(
-          `http://localhost:4000/pay/success?order_id=${orderId}&pg_token=${pgToken}`
+          `http://localhost:4000/api/pay/success?order_id=${orderId}&pg_token=${pgToken}`
         );
 
-        // 결제 승인 성공 시 주문 완료 페이지로 이동
-        navigate('/order/complete');
+        console.log("✅ 결제 승인 성공:", response.data);
+        navigate("/order/complete");
       } catch (error) {
-        console.error('결제 승인 실패:', error.response?.data || error.message);
-        alert('결제 승인에 실패했습니다. 다시 시도해주세요.');
+        console.error("결제 승인 실패:", error.response?.data || error.message);
+        alert("결제 승인에 실패했습니다. 다시 시도해주세요.");
       }
     };
 

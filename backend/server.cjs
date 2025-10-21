@@ -1,15 +1,18 @@
+// server.cjs
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config({ path: '.env.local' });
+const bodyParser = require('body-parser');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
-app.use(express.json());
+
 app.use(cors());
+app.use(bodyParser.json());
 
-// 결제 관련 라우터 연결
-const paymentRoutes = require('./services/payment');
-app.use('/', paymentRoutes);
+// 모든 결제 관련 API는 /api로 시작
+app.use('/api', paymentRoutes);
 
-app.listen(4000, () => {
-  console.log('카카오페이 서버 실행 중');
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`카카오페이 서버 실행 중: http://localhost:${PORT}`);
 });

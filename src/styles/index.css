@@ -589,6 +589,16 @@ color: #333;
   align-items: center;
 }
 
+/* 주문 완료 */
+.order-complete{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+.order-complete p{
+  margin-top: 20px;
+}
 
 /* Desktop(데스크탑) 규격 */
 @media screen and (max-width: 1700px) {
