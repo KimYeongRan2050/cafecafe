@@ -97,26 +97,26 @@ function AddUserPopup({ onClose, user, isEdit }) {
       <div className="popup-content">
         <h3>{isEdit ? "직원 정보 수정" : "직원 추가"}</h3>
         <form onSubmit={handleSubmit}>
-          <input name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
-          <input name="email" placeholder="이메일" value={form.email} onChange={handleChange} required />
+          <input className="Inbutton" name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
+          <input className="Inbutton" name="email" placeholder="이메일" value={form.email} onChange={handleChange} required />
           
           {!isEdit && (
-            <input name="password" type="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />
+            <input className="Inbutton" name="password" type="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />
           )}
 
-          <input name="role" placeholder="직무" value={form.role} onChange={handleChange} required />
+          <input className="Inbutton" name="role" placeholder="직무" value={form.role} onChange={handleChange} required />
 
-          <select className="select" name="status" value={form.status} onChange={handleChange} required>
+          <select className="select Inselect" name="status" value={form.status} onChange={handleChange} required>
             <option value="근무중">근무중</option>
             <option value="휴가중">휴가중</option>
           </select>
 
-          <input name="phone" placeholder="전화번호" value={form.phone} onChange={handleChange} />
-          <input name="salary" placeholder="시급" value={form.salary} onChange={handleChange} />
-          <input name="joined_at" type="date" placeholder="입사일" value={form.joined_at} onChange={handleChange} />
+          <input className="Inbutton" name="phone" placeholder="전화번호" value={form.phone} onChange={handleChange} />
+          <input className="Inbutton" name="salary" placeholder="시급" value={form.salary} onChange={handleChange} />
+          <input className="Inbutton" name="joined_at" type="date" placeholder="입사일" value={form.joined_at} onChange={handleChange} />
           
           {/* 이미지 파일 선택 */}
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+          <input className="Inbutton" type="file" accept="image/*" onChange={handleImageChange} />
           {uploading && <p>이미지 업로드 중...</p>}
 
           {/* 이미지 미리보기 */}
