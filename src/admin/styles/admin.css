@@ -1,3 +1,6 @@
+table td{
+  font-size: 14px;
+}
 /* 전체 틀 */
 .admin-board{
   width: 100%;
@@ -283,19 +286,85 @@ p{
 .option-btn.empty-option {
   background: transparent;
 }
-
-
-
 .product-name {
   width: 230px;
-  /*
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  */
 }
 /* 판매 현황 */
+.admin-menu-list{
+  position: relative;
+}
+.sales-select{
+  display: flex;
+  justify-content: flex-end;
+}
+.sales-select select{
+  padding: 5px 20px;
+  
+}
 
+.sales-default{
+  display: block;
+  position: relative;
+}
+.sales-default div{
+  max-height: 600px;
+  overflow: auto;
+  border: 1px solid #fff;
+}
+.sales-default table{
+  width: 100%;
+  table-layout: fixed;
+}
+.sales-default table th,
+.sales-default table td{
+  vertical-align: middle;
+  text-align: center;
+  padding: 14px 0;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff
+}
+
+.sales-default table td{
+  font-size: 14px;
+}
+
+.sales-default table td:last-child button{
+  width: auto;
+  height: auto;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.admin-list-tb{
+  width: 100%;
+}
+.admin-list-tb thead{
+  position: sticky;
+  top: 0;
+  background: #444;
+  z-index: 2;
+}
+.admin-list-tb tfoot{
+  position: sticky;
+  bottom: 0;
+  background: #444;
+  z-index: 2;
+}
+.paging{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.paging button{
+  width: auto;
+  margin: 0 5px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.paging button:hover{
+  background: #ddd;
+}
 
 /*  회원관리 */
 .member-default{

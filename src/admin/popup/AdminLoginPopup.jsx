@@ -42,6 +42,7 @@ function AdminLoginPopup({onClose}) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="이메일"
+              className="Inbutton"
               required
             />
             <input
@@ -49,6 +50,7 @@ function AdminLoginPopup({onClose}) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호"
+              className="Inbutton"
               required
             />
             <p>{status}</p>

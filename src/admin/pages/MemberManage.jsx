@@ -47,7 +47,7 @@ function MemberManage() {
 
         <div className='admin-menu-list'>
           <div className="admin-service member-default">
-            <table className="member-list">
+            <table className="admin-list-tb">
               <thead>
                 <tr>
                   <th style={{width:"2%"}}>No</th>

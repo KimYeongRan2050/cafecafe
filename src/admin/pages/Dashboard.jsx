@@ -87,8 +87,8 @@ function Dashboard() {
 
         <div className="dashboard_list">
           <div className="item_list the_best_drink">
-            <h4>인기 음료</h4>
-            <p>오늘 가장 많이 판매된 음료 TOP 5</p>
+            <h4>인기 용품</h4>
+            <p>오늘 가장 많이 판매된 용품 TOP 5</p>
             <div className="drink_list">
               <ul>
                 {topDrinks.map((drink, idx) => (
