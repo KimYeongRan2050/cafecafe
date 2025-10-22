@@ -59,12 +59,12 @@ function Signup({ onSignup, onClose }) {
         <div className="popup-content">
           <h3>회원가입</h3>
           <form onSubmit={handleSubmit}>
-            <input type="text" name="id" placeholder="아이디" value={form.id} onChange={handleChange} required />
-            <input type="password" name="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />
-            <input type="text" name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
-            <input type="email" name="email" placeholder="이메일" value={form.email} onChange={handleChange} required />
-            <input type="text" name="phone" placeholder="휴대전화" value={form.phone} onChange={handleChange} required />
-            <input type="address" name="address" placeholder="주소" value={form.address} onChange={handleChange} required />
+            <input className="Inbutton" type="text" name="id" placeholder="아이디" value={form.id} onChange={handleChange} required />
+            <input className="Inbutton" type="password" name="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />
+            <input className="Inbutton" type="text" name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
+            <input className="Inbutton" type="text" name="phone" placeholder="휴대전화" value={form.phone} onChange={handleChange} required />
+            <input className="Inbutton" type="email" name="email" placeholder="이메일" value={form.email} onChange={handleChange} required />
+            <input className="Inbutton" type="address" name="address" placeholder="주소" value={form.address} onChange={handleChange} required />
             
             <button type="submit">회원가입</button>
           </form>

@@ -138,23 +138,23 @@ function OrderManage() {
 
                     <h4 className="product-name">{product.name}</h4>
                     
-                    <div className="option-area">
-                      <div
-                        className={`option-btn ${((product.imageclass || product.imageClass || "" ).toLowerCase() === "barista") ? "empty-option" : ""}`}
-                      >
-                        {((product.imageclass || product.imageClass || "").toLowerCase() !== "barista")
-                          ? (product.option || "옵션 없음")
-                          : "\u00A0"}
-                      </div>
+                    {/* 옵션 / 수량 영역 */}
+                    {(product.option || product.quantity) && (
+                      <div className="option-area">
+                        {product.option && (
+                          <div className="option-btn">
+                            {product.option}
+                          </div>
+                        )}
 
                         {product.quantity && (
                           <div className="option-btn">
                             <span>{product.quantity}</span>
                           </div>
                         )}
+                      </div>
+                    )}
 
-
-                    </div>
 
                     <p>{product.description}</p>
                     <div className='price'>{product.price}원</div>

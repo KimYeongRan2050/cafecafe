@@ -46,6 +46,7 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
             <input
               type="text"
               placeholder="아이디"
+              className="Inbutton"
               value={id}
               onChange={e => setId(e.target.value)}
               required
@@ -53,6 +54,7 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
             <input
               type="password"
               placeholder="비밀번호"
+              className="Inbutton"
               value={pw}
               onChange={e => setPw(e.target.value)}
               required

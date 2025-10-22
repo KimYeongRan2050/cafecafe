@@ -106,16 +106,16 @@ function AddProductPopup({ onClose, onSaved, isEdit = false, product }) {
         <form onSubmit={handleSubmit}>
           {/* imageclass 선택 */}
           <label>카테고리</label>
-          <select className="select" name="imageclass" value={form.imageclass} onChange={handleChange}>
+          <select className="select Inselect" name="imageclass" value={form.imageclass} onChange={handleChange}>
             <option value="coffee">커피</option>
             <option value="latte">라떼</option>
             <option value="grain">곡물라떼</option>
             <option value="other">그외 음료</option>
           </select>
 
-          <input name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
-          <input name="price" placeholder="가격" value={form.price} onChange={handleChange} required />
-          <input name="stock" placeholder="재고" value={form.stock} onChange={handleChange} required />
+          <input className="Inbutton" name="name" placeholder="이름" value={form.name} onChange={handleChange} required />
+          <input className="Inbutton" name="price" placeholder="가격" value={form.price} onChange={handleChange} required />
+          <input className="Inbutton" name="stock" placeholder="재고" value={form.stock} onChange={handleChange} required />
           <textarea name="description" placeholder="설명" value={form.description} onChange={handleChange} required />
           
           {/* 별점 선택 */}

@@ -70,11 +70,14 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
 
         {/* 원두에 표시 그외는 공간만 확보 */}
         {/* 옵션 + 수량 */}
-        {showOptionAndQuantity && (
+        {(product.option || product.quantity) && (
           <div className="option-area">
-            <div className="option-btn">
-              {product.option || "옵션 없음"}
-            </div>
+            {product.option && (
+              <div className="option-btn">
+                {product.option}
+              </div>
+            )}
+
             {product.quantity && (
               <div className="option-btn">
                 <span>{product.quantity}</span>
@@ -82,6 +85,9 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
             )}
           </div>
         )}
+
+
+
 
         {/* 제품 설명 */}
         <p>{product.description || "설명이 없습니다."}</p>
