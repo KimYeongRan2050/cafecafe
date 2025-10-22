@@ -21,12 +21,16 @@
 .popup-content input {
   display: block;
   width: 100%;
-  margin-bottom: 10px;
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ddd;
   box-sizing: border-box;
 }
+.popup-content .Inbutton,
+.popup-content .Inselect {
+  margin-bottom: 10px;
+}
+
 .popup-content button, .popup-message button{
   margin-top: 10px;
   padding: 8px 16px;
@@ -52,8 +56,6 @@
   margin-top: 10px;
 }
 
-
-
 .popup-content label{
   display: none;
 }
@@ -61,11 +63,23 @@
   color: #333;
 }
 
+.popup-product-list{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.popup-product-list p{
+  display: block;
+  width: 30%;
+  margin-top: 0;
+  font-size: 14px;
+}
+
 .select{
   display: block;
   width: 100%;
-  margin-bottom: 12px;
-  padding: 8px 8px 8px 4px;
+  padding: 8px 4px;
   border-radius: 6px;
   color: #828282;
   border: 1px solid #ddd;
@@ -73,10 +87,9 @@
 
 /* 바리스타 용품 옵션 */
 .unit-buttons{
-  display: grid;
+  display: flex;
   gap: 10px;
   margin-bottom: 10px;
-  grid-template-columns: repeat(4, 1fr);
 }
 .unit-buttons button {
   font-size: 12px;

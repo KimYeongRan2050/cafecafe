@@ -588,6 +588,11 @@ color: #333;
   flex-direction: column;
   align-items: center;
 }
+/*  */
+.payment-approval{
+  margin-top: 80px;
+  text-align: center;
+}
 
 /* 주문 완료 */
 .order-complete{

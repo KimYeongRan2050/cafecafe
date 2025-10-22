@@ -1,10 +1,12 @@
 // services/paymentService.js
-const axios = require('axios');
-const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: '.env.local' });
+import axios from "axios";
+import dotenv from "dotenv";
+import { createClient } from "@supabase/supabase-js";
+
+dotenv.config({ path: ".env.local" });
 
 const KAKAO_ADMIN_KEY = process.env.KAKAO_ADMIN_KEY;
-const CID = 'TC0ONETIME';
+const CID = "TC0ONETIME"; // 카카오페이 테스트 CID
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.VITE_SUPABASE_KEY;
 
@@ -13,19 +15,20 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 const isUuid = (value) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 
-async function preparePayment({ productId, productName, quantity, price, table, customId }) {
-  if (!isUuid(productId)) throw new Error('유효하지 않은 상품 ID입니다.');
-  if (!customId) throw new Error('로그인 정보가 누락되었습니다.');
+// 결제 준비
+export async function preparePayment({ productId, productName, quantity, price, table, customId }) {
+  if (!productId || !productName || !quantity || !price)
+    throw new Error("결제 요청 데이터가 누락되었습니다.");
+  if (!isUuid(productId)) throw new Error("유효하지 않은 상품 ID입니다.");
 
   const orderId = `order_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
-  // 카카오페이 결제 준비 요청
   const response = await axios.post(
-    'https://kapi.kakao.com/v1/payment/ready',
+    "https://kapi.kakao.com/v1/payment/ready",
     new URLSearchParams({
       cid: CID,
       partner_order_id: orderId,
-      partner_user_id: customId,
+      partner_user_id: customId || "guest_user",
       item_name: productName,
       quantity,
       total_amount: price * quantity,
@@ -38,13 +41,13 @@ async function preparePayment({ productId, productName, quantity, price, table, 
     {
       headers: {
         Authorization: `KakaoAK ${KAKAO_ADMIN_KEY}`,
-        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
       },
     }
   );
 
-  // 주문 데이터 저장
-  const { error: insertError } = await supabase.from('orders').insert([
+  // 주문 정보 저장
+  const { error: insertError } = await supabase.from("orders").insert([
     {
       order_id: orderId,
       product_id: productId,
@@ -55,92 +58,70 @@ async function preparePayment({ productId, productName, quantity, price, table, 
       source_table: table,
       custom_id: customId,
       tid: response.data.tid,
-      status: 'pending',
+      status: "pending",
       created_at: new Date().toISOString(),
     },
   ]);
 
-  if (insertError) throw new Error('주문 저장 실패: ' + insertError.message);
+  if (insertError) throw new Error("주문 저장 실패: " + insertError.message);
 
   return { redirectUrl: response.data.next_redirect_pc_url };
 }
 
-async function approvePayment(orderId, pgToken) {
-  console.log('🟢 approvePayment() 시작', orderId, pgToken);
+// 결제 승인
+export async function approvePayment(orderId, pgToken) {
+  console.log("approvePayment() 실행:", orderId, pgToken);
 
   const { data, error: fetchError } = await supabase
-    .from('orders')
-    .select('*')
-    .eq('order_id', orderId)
-    .limit(1);
-
-  if (fetchError) {
-    console.error('❌ 주문 조회 에러:', fetchError);
-    throw new Error('주문 조회 중 오류 발생');
-  }
-
-  const order = data?.[0];
-  if (!order) {
-    console.error('❌ 주문 데이터 없음:', orderId);
-    throw new Error('주문 정보가 유실되었습니다.');
-  }
-
-  if (order.status === 'completed') {
-    console.log('이미 승인 완료된 주문입니다.');
-    return { alreadyApproved: true };
-  }
-
-  // 카카오페이 결제 승인 요청
-  try {
-    await axios.post(
-      'https://kapi.kakao.com/v1/payment/approve',
-      new URLSearchParams({
-        cid: CID,
-        tid: order.tid,
-        partner_order_id: order.order_id,
-        partner_user_id: order.custom_id,
-        pg_token: pgToken,
-      }),
-      {
-        headers: {
-          Authorization: `KakaoAK ${KAKAO_ADMIN_KEY}`,
-          'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-        },
-      }
-    );
-  } catch (error) {
-    console.error('❌ 카카오페이 승인 실패:', error.response?.data || error.message);
-    throw new Error('카카오페이 승인 실패');
-  }
-
-  // 재고 감소 처리
-  const { data: productData, error: stockError } = await supabase
-    .from(order.source_table)
-    .select('stock')
-    .eq('id', order.product_id)
+    .from("orders")
+    .select("*")
+    .eq("order_id", orderId)
     .single();
 
-  if (stockError || !productData) throw new Error('재고 조회 실패');
+  if (fetchError) throw new Error("주문 조회 실패");
+  if (!data) throw new Error("주문 정보가 없습니다.");
 
-  const newStock = productData.stock - order.quantity;
+  const order = data;
 
-  const { error: updateError } = await supabase
+  // 카카오페이 결제 승인
+  await axios.post(
+    "https://kapi.kakao.com/v1/payment/approve",
+    new URLSearchParams({
+      cid: CID,
+      tid: order.tid,
+      partner_order_id: order.order_id,
+      partner_user_id: order.custom_id,
+      pg_token: pgToken,
+    }),
+    {
+      headers: {
+        Authorization: `KakaoAK ${KAKAO_ADMIN_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+    }
+  );
+
+  // 재고 감소
+  const { data: product, error: stockError } = await supabase
+    .from(order.source_table)
+    .select("stock")
+    .eq("id", order.product_id)
+    .single();
+
+  if (stockError) throw new Error("상품 재고 조회 실패");
+
+  const newStock = (product.stock || 0) - order.quantity;
+  await supabase
     .from(order.source_table)
     .update({ stock: newStock })
-    .eq('id', order.product_id);
+    .eq("id", order.product_id);
 
-  if (updateError) throw new Error('재고 업데이트 실패');
-
+  // 주문 상태 완료로 변경
   await supabase
-    .from('orders')
-    .update({ status: 'completed' })
-    .eq('order_id', order.order_id);
+    .from("orders")
+    .update({ status: "completed" })
+    .eq("order_id", order.order_id);
 
-  console.log('✅ 결제 승인 및 재고 업데이트 완료');
+  console.log("결제 승인 및 재고 차감 완료");
   return { success: true };
 }
-
-module.exports = {
-  preparePayment,
-  approvePayment,
-};
