@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
-  const [id, setId] = useState("");
+function LoginPopup({ onClose, onLogin, onLoginSuccess, onSignupClick }) {
+  const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (typeof onLogin === "function") {
-      const result = await onLogin(id, pw);
+      const result = await onLogin(email, pw);
       if (result) {
-        localStorage.setItem("custom_id", result.id);
         localStorage.setItem("user_name", result.name);
-        localStorage.setItem("user_id", result.uuid);
-        if (typeof onLoginSuccess === "function") {
-          onLoginSuccess(result);
-        }
+        localStorage.setItem("user_email", result.email);
+        onLoginSuccess(result);
       } else {
         alert("로그인 실패");
       }
@@ -44,11 +41,11 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
           <h3>로그인</h3>
           <form onSubmit={handleSubmit}>
             <input
-              type="text"
-              placeholder="아이디"
+              type="email"
+              placeholder="이메일"
               className="Inbutton"
-              value={id}
-              onChange={e => setId(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
             <input
@@ -56,7 +53,7 @@ function LoginPopup({ onClose, onLogin, onSignupClick, onLoginSuccess }) {
               placeholder="비밀번호"
               className="Inbutton"
               value={pw}
-              onChange={e => setPw(e.target.value)}
+              onChange={(e) => setPw(e.target.value)}
               required
             />
             <div className="login-btn">

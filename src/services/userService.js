@@ -14,9 +14,7 @@ export async function getUsers() {
 export async function addUser({ id, name, email, role, department, userData }) {
   const { data, error } = await supabase
     .from('users')
-    .insert([
-      { id, name, email, role, department, userData }
-    ])
+    .insert([{ id, name, email, role, department, userData }])
     .select();
 
   if (error) throw error;
@@ -50,46 +48,6 @@ export async function removeUser(id) {
   return data[0];
 }
 
-
-export async function loginUser(email, password) {
-  // 임시 관리자 계정 허용
-  if (email === "admin@mail.com" && password === "123456") {
-    return {
-      id: "temp-admin",
-      name: "관리자",
-      role: "admin",
-      email
-    };
-  }
-
-  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-    email: email.trim(),
-    password
-  });
-
-  if (authError || !authData?.user) {
-    throw new Error("로그인 실패: " + authError.message);
-  }
-
-  const userId = authData.user.id;
-
-  const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", userId)
-    .single();
-
-  if (userError || !userData) {
-    throw new Error("직원 정보 없음 또는 권한 없음");
-  }
-
-  if (userData.role !== "admin") {
-    throw new Error("관리자 권한이 없습니다.");
-  }
-
-  return userData;
-}
-
 // 직원 등록: Auth + users 테이블 삽입
 export async function registerUser(email, password, userInfo) {
   // 1. Supabase Auth 등록
@@ -109,11 +67,11 @@ export async function registerUser(email, password, userInfo) {
       id: userId,
       email,
       name: userInfo.name,
-      role: userInfo.role,
-      status: userInfo.status,
-      phone: userInfo.phone,
-      salary: userInfo.salary,
-      joined_at: userInfo.joined_at,
+      role: userInfo.role || "user",
+      status: userInfo.status || "active",
+      phone: userInfo.phone || null,
+      salary: userInfo.salary || null,
+      joined_at: userInfo.joined_at || new Date().toISOString(),
       profile_img: userInfo.profile_img || "staff-default.png"
     }
   ]);

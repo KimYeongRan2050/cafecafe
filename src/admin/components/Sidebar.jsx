@@ -4,13 +4,12 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import { getUserImageUrl } from "../../services/userImageService";
 import "../styles/admin.css";
 
-function Sidebar() {
+function Sidebar({ adminInfo, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { adminInfo, logout } = useAdminAuth();
 
   const handleLogout = () => {
-    logout();
+    if (onLogout) onLogout();
     navigate("/");
   };
 

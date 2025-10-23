@@ -130,7 +130,7 @@ function SalesManage() {
                         <td>₩{order.total_price?.toLocaleString()}</td>
                         <td>{order.customer_name || "-"}</td>
                         <td>{formatDate(order.created_at)}</td>
-                        <td>{order.custom_id}</td>
+                        <td>{order.id}</td>
                       </tr>
                     ))
                   ) : (

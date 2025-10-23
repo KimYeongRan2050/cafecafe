@@ -1,134 +1,94 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link as ScrollLink } from 'react-scroll';
+import React, { useState, useRef, useEffect } from "react";
+import { Link as ScrollLink } from "react-scroll";
 import Cart from "../pages/Cart";
-import LoginPopup from "../pages/LoginPopup";
-import Signup from "../pages/Signup";
 import AdminLoginPopup from "../admin/popup/AdminLoginPopup";
-import { supabase } from "../services/supabaseClient";
 
-
-function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, onLogin, userInfo, setUserInfo }) {
+function Header({
+  cart,
+  setCart,
+  showCartPopup,
+  setShowCartPopup,
+  onCartClick,
+  userInfo,
+  onLoginClick,
+  onLogout,
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [showSignupPopup, setShowSignupPopup] = useState(false);
   const [showAdminLoginPopup, setShowAdminLoginPopup] = useState(false);
-  const [showTestUserFlowPopup, setShowTestUserFlowPopup] = useState(false);
 
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
-  //메뉴 토글 함수
-  const handleMenuClick = () => {
-    setIsMenuOpen(prev => !prev);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const handleLoginClick = () => {
-    setShowLoginPopup(true);
-    closeMenu();
-  };
-
-  const handleSignup = (FormData) => {
-    setShowSignupPopup(false);
-  };
-
-  // 메뉴 외부 클릭 시 닫기
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(event.target) &&
-      buttonRef.current &&
-      !buttonRef.current.contains(event.target)
-    ) {
-      setIsMenuOpen(false);
-    }
-  };
-
-    document.addEventListener("mousedown", handleClickOutside); // 이벤트 타입 수정
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside); // 정리도 동일하게
-    };
-  }, [isMenuOpen]);
-
-  useEffect(() => {
-    const savedId = localStorage.getItem("custom_id");
-    const saveName = localStorage.getItem("user_name");
-    if (savedId && saveName) {
-      setUserInfo({id:savedId, name: saveName});
-    }
-  }, []);
-
   const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-  return(
-    <div className='mainimg'>
-      <div className='top_menu'>
+  const handleMenuClick = () => setIsMenuOpen((prev) => !prev);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <>
+    <header className="main-header">
+      <div className="top_menu">
         <div className="logo_img">
-          <a href="/" className='logo_box'>카페카페</a>
+          <a href="/" className="logo_box">카페카페</a>
         </div>
 
-        <nav>
-          <div><ScrollLink to="beanSection" smooth={true} duration={500} offset={-160}>원두</ScrollLink></div>
-          <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-160}>카페리움</ScrollLink></div>
-          <div><ScrollLink to="otherSection" smooth={true} duration={500} offset={-160}>그외 상품</ScrollLink></div>
-          <div><ScrollLink to="storeCoffeeSection" smooth={true} duration={500} offset={-160}>커피음료</ScrollLink></div>
-          <div><ScrollLink to="storeLatteSection" smooth={true} duration={500} offset={-160}>라떼&곡물음료</ScrollLink></div>
-          <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-160}>스토어</ScrollLink></div>
+        <nav className="desktop_menu">
+          <div><ScrollLink to="beanSection" smooth duration={500} offset={-160}>원두</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth duration={500} offset={-160}>카페리움</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth duration={500} offset={-160}>커피</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth duration={500} offset={-160}>라떼&곡물</ScrollLink></div>
+          <div><ScrollLink to="storeSection" smooth duration={500} offset={-160}>스토어</ScrollLink></div>
         </nav>
 
-        <div className='top_user'>
+        <div className="top_user">
           <div className="signup_name">
             {userInfo ? (
-              <>
-                <h4>{userInfo.name} 님 환영합니다.</h4>
-              </>
+              <h4>{userInfo.name} 님 환영합니다.</h4>
             ) : (
               <h4>로그인해주세요</h4>
             )}
           </div>
-          
+
           <div className="icon_cart">
             <span>{totalQuantity}</span>
             <button
-              className="cart-btn"
-              onClick={() => {
-                typeof onCartClick === "function" && onCartClick();
-                setShowCartPopup(true);
-                setIsMenuOpen(false);
-              }}
-            >
+              className="cart-btn" onClick={() => { onCartClick?.(); setShowCartPopup(true); }}>
               <i className="bi bi-cart2"></i>
             </button>
           </div>
+
           <div className="admin_btn">
-            <button onClick={() => {
-              setShowAdminLoginPopup(true);
-              //setShowTestUserFlowPopup(true);
-              closeMenu();
-            }}>
+            <button onClick={() => { setShowAdminLoginPopup(true); closeMenu(); }}>
               <i className="bi bi-gear-fill"></i>
               관리자
             </button>
           </div>
+
           <div className="login_btn">
             {userInfo ? (
-              <button onClick={() => {
-                setUserInfo(null);
-                localStorage.removeItem('custom_id');
-              }}>로그아웃</button>
+              <button onClick={onLogout}>로그아웃</button>
             ) : (
-              <button onClick={handleLoginClick}>
-                <i className="bi bi-person-fill"></i>
-                로그인
+              <button onClick={onLoginClick}>
+                <i className="bi bi-person-fill"></i> 로그인
               </button>
             )}
           </div>
-          {/* 모바일 메뉴버튼 */}
+
           <div className="icon_btn">
             <button className="icon" onClick={handleMenuClick} ref={buttonRef}>
               <i className="fa fa-bars"></i>
@@ -137,47 +97,26 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
         </div>
       </div>
 
-      {/* 모바일 메뉴 */}
-      <div className="mobile_menu">
-        {/* 메뉴리스트 */}
-        <div className={`mobile_menu_list ${isMenuOpen ? "open" : "close"}`} ref={menuRef}>
-          <div className="mobile_menu_product" id="menuLinks">
-            <div><ScrollLink to="beanSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>원두</ScrollLink></div>
-            <div><ScrollLink to="cafereumSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>카페리움</ScrollLink></div>
-            <div><ScrollLink to="otherSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>그외 상품</ScrollLink></div>
-            <div><ScrollLink to="storeCoffeeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>커피</ScrollLink></div>
-            <div><ScrollLink to="storeLatteSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>라떼&곡물</ScrollLink></div>
-            <div><ScrollLink to="storeSection" smooth={true} duration={500} offset={-100} onClick={closeMenu}>스토어</ScrollLink></div>
-          </div>
+      <div className={`mobile_menu ${isMenuOpen ? "open" : "close"}`} ref={menuRef}>
+        <div className="mobile_menu_list">
+          <div><ScrollLink to="beanSection" smooth duration={500} offset={-100} onClick={closeMenu}>원두</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth duration={500} offset={-100} onClick={closeMenu}>카페리움</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth duration={500} offset={-100} onClick={closeMenu}>커피</ScrollLink></div>
+          <div><ScrollLink to="cafereumSection" smooth duration={500} offset={-100} onClick={closeMenu}>라떼</ScrollLink></div>
+          <div><ScrollLink to="storeSection" smooth duration={500} offset={-100} onClick={closeMenu}>스토어</ScrollLink></div>
 
           <div className="mobile_user">
-            <div className="login_btn">
-              {userInfo ? (
-                <>
-                  <button onClick={() => {
-                    setUserInfo(null);
-                    localStorage.removeItem('custom_id');
-                    setIsMenuOpen(false);
-                  }}>로그아웃</button>
-                </>
-              ) : (
-                <button onClick={handleLoginClick}>
-                  <i className="bi bi-person-fill"></i>
-                  로그인
-                </button>
-              )}
-            </div>
-            
-            <div className="admin_btn">
-              <button onClick={() => {
-                setShowAdminLoginPopup(true);
-                //setShowTestUserFlowPopup(true);
-                closeMenu();
-              }}>
-                <i className="bi bi-gear-fill"></i>
-                관리자
+            {userInfo ? (
+              <button onClick={() => { onLogout(); closeMenu(); }}>로그아웃</button>
+            ) : (
+              <button onClick={() => { onLoginClick(); closeMenu(); }}>
+                <i className="bi bi-person-fill"></i> 로그인
               </button>
-            </div>
+            )}
+
+            <button className="admin_btn" onClick={() => { setShowAdminLoginPopup(true); closeMenu(); }}>
+              <i className="bi bi-gear-fill"></i> 관리자
+            </button>
           </div>
         </div>
       </div>
@@ -185,85 +124,17 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
       {showCartPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
-            <Cart
-              cart={cart}
-              setCart={setCart}
-              openLoginPopup={() => setShowLoginPopup(true)}
-            />
+            <Cart cart={cart} setCart={setCart} />
             <button className="close-btn" onClick={() => setShowCartPopup(false)}>닫기</button>
           </div>
         </div>
       )}
-      
-      {/* 로그인 팝업 */}
-      {showLoginPopup && (
-        <LoginPopup
-          onClose={() => setShowLoginPopup(false)}
-          onLogin={onLogin}
-          onLoginSuccess={(user) => {
-            setUserInfo(user);
-            setShowLoginPopup(false);
-          }}
-          onSignupClick={() => {
-            setShowLoginPopup(false);
-            setShowSignupPopup(true);
-          }}
-        />
-      )}
 
-      {/* 회원가입 팝업 */}
-      {showSignupPopup && (
-      <div className="popup-overlay" onClick={() => setShowSignupPopup(false)}>
-        <div className="popup" onClick={e => e.stopPropagation()}>
-          <Signup
-            onSignup={handleSignup}
-            onClose={() => setShowSignupPopup(false)}
-          />
-        </div>
-      </div>
-      )}
-
-
-      {/* 관리자 로그인 팝업 */}
       {showAdminLoginPopup && (
-        <AdminLoginPopup
-          onClose={() => setShowAdminLoginPopup(false)}
-          onAdminLogin={async (email, pw) => {
-            
-          const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-            email,
-            password : pw
-          });
-
-          if (authError || !authData?.user) {
-            alert("로그인 실패: " + authError.message);
-            return null;
-          }
-
-          // users 테이블에서 관리자 권한 확인
-          const { data: userData, error: userError } = await supabase
-            .from("users")
-            .select("name, role, is_verified")
-            .eq("id", authData.user.id)
-            .single();
-
-          if (userError || !userData || !userData.is_verified || userData.role !== "admin") {
-            alert("관리자 권한이 없습니다.");
-            return null;
-          }
-
-          return {
-            name: userData.name,
-            role: userData.role,
-            email: authData.user.email
-          };
-
-          }}
-        />
+        <AdminLoginPopup onClose={() => setShowAdminLoginPopup(false)} />
       )}
-
-    </div>
-
+    </header>
+    </>
   );
 }
 

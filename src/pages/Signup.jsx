@@ -3,7 +3,6 @@ import { supabase } from "../services/supabaseClient";
 
 function Signup({ onClose }) {
   const [form, setForm] = useState({
-    id: "", // 사용자가 입력하는 아이디
     email: "",
     password: "",
     name: "",
@@ -24,48 +23,31 @@ function Signup({ onClose }) {
 
     try {
       // Supabase Auth 계정 생성
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: form.email.trim(),
-        password: form.password.trim(),
+      const { data, error } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
       });
-
-      if (authError) {
-        if (authError.message.includes("already registered")) {
-          alert("이미 가입된 이메일입니다. 로그인해주세요.");
-          return;
-        }
-        throw authError;
-      }
-
-      const user = authData?.user;
-      if (!user) throw new Error("회원 생성 실패: 사용자 정보 없음");
-
-      // 잠시 대기 (auth.users 반영 시간)
-      await new Promise((r) => setTimeout(r, 500));
+      if (error) throw error;
+      
+      const user = data.user;
+      if (!user) throw new Error("회원 정보가 없습니다.");
 
       // members 테이블에 회원 정보 추가
       const { error: insertError } = await supabase.from("members").insert([
         {
           uuid: user.id, // auth.users.id 참조
-          id: form.id, // 사용자가 직접 입력한 로그인용 아이디
           name: form.name,
           email: form.email,
           phone: form.phone,
           address: form.address,
-          status: "활동중",
           created_at: new Date().toISOString(),
         },
       ]);
-
-      if (insertError) {
-        console.error("members insert error:", insertError);
-        throw new Error(insertError.message);
-      }
+      if (insertError) throw insertError;
 
       alert("회원가입이 완료되었습니다. 로그인해주세요!");
       onClose?.();
     } catch (error) {
-      console.error("회원가입 오류:", error.message);
       alert("회원가입 실패: " + error.message);
     } finally {
       setLoading(false);

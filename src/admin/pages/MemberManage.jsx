@@ -71,7 +71,7 @@ function MemberManage() {
                   <td>
                     <input type="checkbox" name="" id="" />
                   </td>
-                  <td>{member.custom_id}</td>
+                  <td>{member.id}</td>
                   <td>{member.name}</td>
                   <td>일반회원</td>
                   <td>{member.email}</td>

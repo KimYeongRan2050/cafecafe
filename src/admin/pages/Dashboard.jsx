@@ -10,7 +10,7 @@ import {
 import { getTotalStaffCount } from "../../services/userService";
 import { getAllLowStockItems } from "../../services/productService";
 
-function Dashboard() {
+function Dashboard({ adminInfo, onLogout }) {
   const [totalStaff, setTotalStaff] = useState(0);
   const [todaySales, setTodaySales] = useState(0);
   const [salesChange, setSalesChange] = useState(0);
