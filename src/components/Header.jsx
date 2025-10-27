@@ -116,8 +116,7 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
             {/* 관리자 로그인 */}
             <div className="admin_btn">
               <button onClick={() => { setShowAdminLoginPopup(true); closeMenu(); }}>
-                <i className="bi bi-gear-fill"></i>
-                관리자
+                <i className="bi bi-gear-fill"></i>관리자
               </button>
             </div>
 
@@ -127,7 +126,7 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
                 <button onClick={handleLogout}>로그아웃</button>
               ) : (
                 <button onClick={() => setShowLoginPopup(true)}>
-                  <i className="bi bi-person-fill"></i> 로그인
+                  <i className="bi bi-person-fill"></i>로그인
                 </button>
               )}
             </div>
@@ -159,7 +158,7 @@ function Header({ cart, setCart, showCartPopup, setShowCartPopup, onCartClick, o
                 </>
               ) : (
                 <button onClick={() => { setShowLoginPopup(true); closeMenu(); }}>
-                  로그인
+                  <i className="bi bi-person-fill"></i>로그인
                 </button>
               )}
             </div>

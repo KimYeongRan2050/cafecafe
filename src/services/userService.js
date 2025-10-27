@@ -68,11 +68,11 @@ export async function registerUser(email, password, userInfo) {
       email,
       name: userInfo.name,
       role: userInfo.role || "user",
-      status: userInfo.status || "active",
+      status: userInfo.status || "근무중",
       phone: userInfo.phone || null,
       salary: userInfo.salary || null,
       joined_at: userInfo.joined_at || new Date().toISOString(),
-      profile_img: userInfo.profile_img || "staff-default.png"
+      profile_img: userInfo.profile_img || null
     }
   ]);
 

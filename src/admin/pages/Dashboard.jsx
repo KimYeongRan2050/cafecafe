@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import {
   getTodaySummary,
@@ -19,6 +19,8 @@ function Dashboard({ adminInfo, onLogout }) {
   const [lowStockItems, setLowStockItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
     async function fetchData() {
       try {
@@ -121,7 +123,7 @@ function Dashboard({ adminInfo, onLogout }) {
                         <p>
                           {drink.name} <span>{drink.quantity} 개</span>
                         </p>
-                        <input type="range" min="1" max="50" value={drink.quantity} readOnly />
+                        <input type="range" min="1" max="10" value={drink.quantity} readOnly />
                       </div>
                     </li>
                   ))
@@ -130,6 +132,13 @@ function Dashboard({ adminInfo, onLogout }) {
                 )}
               </ul>
             </div>
+
+            <div className="goto-report">
+              <button onClick={() => navigate("/admin/sales-report")}>
+                판매 리포트 자세히 보기
+              </button>
+            </div>
+
           </div>
 
           {/* 재고 부족 알림 */}
@@ -149,9 +158,10 @@ function Dashboard({ adminInfo, onLogout }) {
                 ))}
               </ul>
             </div>
-          </div>
+          </div>      
         </div>
       </div>
+
     </div>
   );
 }

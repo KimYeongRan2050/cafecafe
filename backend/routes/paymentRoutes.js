@@ -12,8 +12,11 @@ router.post("/pay", async (req, res) => {
     const response = await preparePayment(orderInfo);
     res.json(response);
   } catch (error) {
-    console.error("결제 준비 실패:", error);
-    res.status(500).json({ error: "결제 준비 실패", details: error.message });
+    console.error("결제 준비 실패:", error.response?.data || error.message);
+    res.status(500).json({
+      error: "결제 준비 실패",
+      details: error.response?.data || error.message,
+    });
   }
 });
 

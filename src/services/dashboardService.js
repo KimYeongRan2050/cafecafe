@@ -1,17 +1,21 @@
-// src/services/dashboardService.js
 import { supabase } from "./supabaseClient";
 
 /**
- * 오늘 매출 합계
+ * 오늘 매출 합계 (KST 기준)
  */
 export async function getTodaySummary() {
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC → KST 보정
+  const today = koreaTime.toISOString().split("T")[0];
+
+  const todayStart = new Date(`${today}T00:00:00+09:00`).toISOString();
+  const todayEnd = new Date(`${today}T23:59:59+09:00`).toISOString();
 
   const { data, error } = await supabase
     .from("orders")
     .select("total_price, created_at")
-    .gte("created_at", `${today}T00:00:00`)
-    .lte("created_at", `${today}T23:59:59`);
+    .gte("created_at", todayStart)
+    .lte("created_at", todayEnd);
 
   if (error) {
     console.error("getTodaySummary error:", error.message);
@@ -22,18 +26,22 @@ export async function getTodaySummary() {
 }
 
 /**
- * 어제 매출 합계
+ * 어제 매출 합계 (KST 기준)
  */
 export async function getYesterdaySummary() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yDate = yesterday.toISOString().split("T")[0];
+  const now = new Date();
+  const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  koreaTime.setDate(koreaTime.getDate() - 1); // 어제 날짜
+  const yDate = koreaTime.toISOString().split("T")[0];
+
+  const yStart = new Date(`${yDate}T00:00:00+09:00`).toISOString();
+  const yEnd = new Date(`${yDate}T23:59:59+09:00`).toISOString();
 
   const { data, error } = await supabase
     .from("orders")
     .select("total_price, created_at")
-    .gte("created_at", `${yDate}T00:00:00`)
-    .lte("created_at", `${yDate}T23:59:59`);
+    .gte("created_at", yStart)
+    .lte("created_at", yEnd);
 
   if (error) {
     console.error("getYesterdaySummary error:", error.message);
@@ -60,40 +68,45 @@ export async function getTotalOrders() {
 }
 
 /**
- * 인기 용품 TOP 5 (오늘 가장 많이 팔린 제품)
+ * 오늘 인기 용품 TOP 5 (KST 기준)
  */
 export async function getTopDrinks() {
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  const today = koreaTime.toISOString().split("T")[0];
+
+  const todayStart = new Date(`${today}T00:00:00+09:00`).toISOString();
+  const todayEnd = new Date(`${today}T23:59:59+09:00`).toISOString();
 
   const { data, error } = await supabase
     .from("orders")
     .select("product_name, quantity, created_at")
-    .gte("created_at", `${today}T00:00:00`)
-    .lte("created_at", `${today}T23:59:59`);
+    .gte("created_at", todayStart)
+    .lte("created_at", todayEnd);
 
   if (error) {
     console.error("getTopDrinks error:", error.message);
     return [];
   }
 
-  // 제품별 판매량 합산
+  // 제품별 수량 합산
   const productMap = {};
   data.forEach((order) => {
     if (order.product_name && order.quantity) {
       productMap[order.product_name] =
-        (productMap[order.product_name] || 0) + order.quantity;
+        (productMap[order.product_name] || 0) + Number(order.quantity);
     }
   });
 
-  // 정렬 및 상위 5개
+  // 수량순 정렬 후 상위 5개만
   return Object.entries(productMap)
     .map(([name, quantity]) => ({ name, quantity }))
     .sort((a, b) => b.quantity - a.quantity)
-    .slice(0, 5);
+    .slice(0, 10);
 }
 
 /**
- * 오늘 대비 어제 매출 변화율
+ * 오늘 대비 어제 매출 변화율 (%)
  */
 export async function getSalesChangeRate() {
   const today = await getTodaySummary();

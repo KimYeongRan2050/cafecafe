@@ -15,6 +15,7 @@ import Dashboard from "./admin/pages/Dashboard";
 import ProductManage from "./admin/pages/ProductManage";
 import OrderManage from "./admin/pages/OrderManage";
 import SalesManage from "./admin/pages/SalesManage";
+import SalesReport from "./admin/pages/SalesReport";
 import MemberManage from "./admin/pages/MemberManage";
 import UserManage from "./admin/pages/UserManage";
 import MainRoutes from "./routes/MainRoutes";
@@ -163,6 +164,7 @@ function App() {
           <Route path="product" element={<ProductManage />} />
           <Route path="supplies" element={<OrderManage />} />
           <Route path="sales" element={<SalesManage />} />
+          <Route path="sales-report" element={<SalesReport />} />
           <Route path="member" element={<MemberManage />} />
           <Route path="users" element={<UserManage />} />
         </Route>
