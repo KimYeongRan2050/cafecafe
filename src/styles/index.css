@@ -681,22 +681,24 @@ color: #333;
     display: block;
     width: 100%;
     padding: 20px;
-    color: #333;    
+    color: #333;
     border-bottom: 1px dashed #a9a9a9;
     cursor: pointer;
     text-align: center;
   }  
 
   .mobile_menu nav a:hover{
-    color: #c35930;
+    color: #fff;
+    background: #c35930;
   }
 
   .mobile_user{
     margin: 20px;
+    margin-bottom: 0;
   }
   /* 관리자 버튼 */
-  .mobile_user .admin_btn{
-    margin: 10px 0;
+  .mobile_user.admin_btn{
+    margin: 10px 20px 20px;
   }
 
   /* 컨텐츠 css */ 

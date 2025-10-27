@@ -1,13 +1,14 @@
 // src/admin/pages/SalesManage.jsx
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { supabase } from "../../services/supabaseClient";
+import "../../admin/styles/admin.css";
 
-function SalesManage({ adminInfo, onLogout }) {
+function SalesManage() {
   const [orders, setOrders] = useState([]);
   const [sortType, setSortType] = useState("recent");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true)
   const itemsPerPage = 15;
 
   // 주문 데이터 로드
@@ -29,17 +30,7 @@ function SalesManage({ adminInfo, onLogout }) {
     try {
       const { data, error } = await supabase
         .from("orders")
-        .select(`
-          id,
-          order_id,
-          product_name,
-          quantity,
-          price,
-          total_price,
-          custom_id,
-          created_at
-        `)
-
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -122,9 +113,9 @@ function SalesManage({ adminInfo, onLogout }) {
                         <td>{order.quantity}</td>
                         <td>₩{order.price?.toLocaleString()}</td>
                         <td>₩{order.total_price?.toLocaleString()}</td>
-                        <td>{order.customer_name || "-"}</td>
+                        <td>{order.name || "-"}</td>
                         <td>{formatDate(order.created_at)}</td>
-                        <td>{order.id}</td>
+                        <td>{order.custom_id}</td>
                       </tr>
                     ))
                   ) : (

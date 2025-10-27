@@ -49,10 +49,9 @@ function MemberManage({ adminInfo, onLogout }) {
                   <th style={{width:"2%"}}>
                     <input type="checkbox" name="" id="" />
                   </th>
-                  <th>아이디</th>
+                  <th style={{width:"12%"}}>이메일</th>
                   <th>이름</th>
                   <th>등급</th>
-                  <th style={{width:"12%"}}>이메일</th>
                   <th>전화번호</th>
                   <th style={{width:"34%"}}>주소</th>
                   <th>등록일</th>
@@ -65,11 +64,10 @@ function MemberManage({ adminInfo, onLogout }) {
                   <td>{index + 1}</td>
                   <td>
                     <input type="checkbox" name="" id="" />
-                  </td>
-                  <td>{member.id}</td>
+                  </td> 
+                  <td>{member.email}</td>
                   <td>{member.name}</td>
                   <td>일반회원</td>
-                  <td>{member.email}</td>
                   <td>{member.phone}</td>
                   <td>
                     {member.address}
