@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../components/Header";
 import { 
   getBaristaProducts,
   addBaristaProduct,
@@ -11,7 +11,7 @@ import {
 import AddOrderPopup from "../popup/AddOrderPopup";
 import { getProductImageUrl } from "../../services/productImage";
 
-function OrderManage() {
+function OrderManage({ adminInfo, onLogout }) {
   const [products, setProducts] = useState([]);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
@@ -62,13 +62,8 @@ function OrderManage() {
 
   return(
     <div className="admin-board">
-      <div className="admin-left">
-        <Sidebar />
-      </div>
       <div className="admin-right">
-        <div className="admin-header">
-          <AdminHeader />
-        </div>
+        <div className="admin-header"><Header /></div>
 
         <div className="admin-title">
           <h3>바리스타 용품</h3>

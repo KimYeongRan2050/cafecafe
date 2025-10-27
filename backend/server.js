@@ -1,22 +1,34 @@
-// server.cjs
+// backend/server.js
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
-dotenv.config({ path: ".env.local" });
+dotenv.config();
 
+// 미들웨어 설정
 const app = express();
-const PORT = 4000;
-
-// 필수 미들웨어 (req.body 파싱 & CORS 허용)
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 
-// 라우터 연결
-app.use("/", paymentRoutes);
+// 결제 라우터 등록
+app.use("/api", paymentRoutes);
 
-app.listen(PORT, () => {
-  console.log(`카카오페이 서버 실행 중: http://localhost:${PORT}`);
+app.listen(4000, () => {
+  console.log("카카오페이 서버 실행 중: http://localhost:4000");
 });
+
+// server.js 마지막에 추가
+import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
+

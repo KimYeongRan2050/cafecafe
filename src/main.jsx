@@ -6,9 +6,12 @@ import './styles/index.css';
 import './styles/popup.css';
 import './admin/styles/admin.css'
 import App from './App';
+import { AdminAuthProvider } from './context/AdminAuthContext';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <App />
+    <AdminAuthProvider>
+      <App />
+    </AdminAuthProvider>
   </BrowserRouter>,
 )

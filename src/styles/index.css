@@ -365,9 +365,8 @@ color: #333;
 }
 
 /****** 모바일에 구현된 메뉴 ******/
-.mobile_menu{
+.mobile_menu nav{
   display: none;
-  background-color: rgba(0, 0, 0, 0.87);
 }
 .mobile_toolbar{
   display: flex;
@@ -663,22 +662,34 @@ color: #333;
   .top_user .icon_btn{
     display: block;
   }
-
   .mobile_menu{
     position: fixed;
     display: block;
-    background-color: rgba(0, 0, 0, 0.87);
+    background: #fff;
     z-index: 1;
     top: 60px;
     left: 0;
     right: 0;
   }
-  .mobile_menu_product div{
+  .mobile_menu nav{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: 0;
+  }  
+  .mobile_menu nav a{
+    display: block;
+    width: 100%;
+    padding: 20px;
+    color: #333;    
     border-bottom: 1px dashed #a9a9a9;
+    cursor: pointer;
+    text-align: center;
+  }  
+
+  .mobile_menu nav a:hover{
+    color: #c35930;
   }
-    .mobile_menu_product div:last-child{
-      border-bottom: 0;
-    }
 
   .mobile_user{
     margin: 20px;

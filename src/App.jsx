@@ -1,26 +1,52 @@
+// src/App.jsx
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import Index from "./pages/index.jsx";
-import Header from "./components/Header.jsx";
-import LoginPopup from "./pages/LoginPopup.jsx";
-import Signup from "./pages/Signup.jsx";
-import Dashboard from "./admin/pages/Dashboard.jsx";
-import { supabase } from "./services/supabaseClient.js";
+import { 
+  BrowserRouter as Router, 
+  Routes, 
+  Route, 
+  useLocation, 
+  useNavigate 
+} from "react-router-dom";
+import Header from "./components/Header";
+import LoginPopup from "./pages/LoginPopup";
+import Signup from "./pages/Signup";
+import AdminLayout from "./admin/layout/AdminLayout";
+import Dashboard from "./admin/pages/Dashboard";
+import ProductManage from "./admin/pages/ProductManage";
+import OrderManage from "./admin/pages/OrderManage";
+import SalesManage from "./admin/pages/SalesManage";
+import MemberManage from "./admin/pages/MemberManage";
+import UserManage from "./admin/pages/UserManage";
+import MainRoutes from "./routes/MainRoutes";
+import AdminLoginPopup from "./admin/popup/AdminLoginPopup";
+import { supabase } from "./services/supabaseClient";
 
 function App() {
-  const [userInfo, setUserInfo] = useState(null); // 일반 회원 정보
-  const [adminInfo, setAdminInfo] = useState(null); // 관리자 정보
-  const [cart, setCart] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const [adminInfo, setAdminInfo] = useState(null);
+  const [cart, setCart] = useState([]); // 장바구니 상태
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
-  const [session, setSession] = useState(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [showAdminLoginPopup, setShowAdminLoginPopup] = useState(false);
 
-  // 일반 사용자 로그인
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  //새로고침 시 관리자 로그인 복원
+  useEffect(() => {
+    const storedAdmin = localStorage.getItem("adminInfo");
+    if (storedAdmin) {
+      setAdminInfo(JSON.parse(storedAdmin));
+    }
+  }, []);
+
+  // 로그인
   const handleLogin = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) {
       alert("로그인 실패: " + error.message);
       return null;
@@ -31,21 +57,20 @@ function App() {
 
     const { data: member } = await supabase
       .from("members")
-      .select("name, email")
-      .eq("uuid", user.id)
-      .single();
+      .select("uuid, name, email")
+      .eq("email", email)
+      .maybeSingle();
 
     if (member) {
-      const info = { name: member.name, email: member.email, uuid: user.id };
-      setUserInfo(info);
+      setUserInfo(member);
       localStorage.setItem("user_name", member.name);
       localStorage.setItem("user_email", member.email);
-      return info;
+      alert(`${member.name}님 환영합니다!`);
+      navigate("/");
     }
-    return null;
   };
 
-  // 로그아웃 (공통)
+  // 로그아웃
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUserInfo(null);
@@ -55,68 +80,47 @@ function App() {
     navigate("/");
   };
 
-  // 세션 복원 (회원 / 관리자 모두)
-  useEffect(() => {
-    const init = async () => {
-      const { data } = await supabase.auth.getSession();
-      const session = data.session;
-      setSession(session);
-
-      if (session?.user) {
-        const email = session.user.email;
-
-        // users 테이블에서 role 확인 (관리자 / 직원)
-        const { data: userRecord, error: userError } = await supabase
-          .from("users")
-          .select("email, role, name")
-          .ilike("email", email)
-          .single();
-
-        if (userError) {
-          console.error("Supabase users 조회 실패:", userError.message);
-        }
-
-        if (userRecord && (userRecord.role === "admin" || userRecord.role === "staff")) {
-          // 관리자 로그인 상태 복원
-          setAdminInfo({
-            email: userRecord.email,
-            role: userRecord.role,
-            name: userRecord.name || "관리자",
-          });
-        } else {
-          // 일반 회원 로그인 상태 복원
-          const { data: member } = await supabase
-            .from("members")
-            .select("name, email")
-            .eq("uuid", session.user.id)
-            .single();
-
-          if (member) {
-            setUserInfo({ name: member.name, email: member.email, uuid: session.user.id });
-          }
-        }
-      }
-    };
-
-    init();
-
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setSession(session);
-    });
-    return () => sub.subscription.unsubscribe();
-  }, []);
-
   // 관리자 보호 라우트
   const ProtectedAdminRoute = ({ children }) => {
     if (!adminInfo) {
-      return <div style={{ padding: "2rem" }}>관리자 로그인이 필요합니다.</div>;
+      // 관리자 로그인이 안 된 경우 팝업 표시
+      return (
+        <AdminLoginPopup
+          onClose={() => {
+            setShowAdminLoginPopup(false);
+            navigate("/");
+          }}
+          onLoginSuccess={(admin) => {
+            setAdminInfo(admin);
+            navigate("/admin/dashboard");
+          }}
+        />
+      );
     }
     return children;
   };
 
+  // 세션 복원
+  useEffect(() => {
+    const restoreSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+      if (!session?.user) return;
+
+      const email = session.user.email;
+      const { data: member } = await supabase
+        .from("members")
+        .select("uuid, name, email")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (member) setUserInfo(member);
+    };
+    restoreSession();
+  }, []);
+
   return (
     <>
-      {/* 관리자 페이지에는 Header 숨김 */}
       {!location.pathname.startsWith("/admin") && (
         <Header
           cart={cart}
@@ -127,35 +131,54 @@ function App() {
           userInfo={userInfo}
           onLoginClick={() => setShowLogin(true)}
           onLogout={handleLogout}
+          onAdminLogin={(admin) => setAdminInfo(admin)}
         />
       )}
 
       <Routes>
-        {/* 일반 메인 페이지 */}
-        <Route path="/" element={<Index cart={cart} setCart={setCart} />} />
-
-        {/* 관리자 페이지 */}
+        {/* cart, setCart 전달 */}
         <Route
-          path="/admin/dashboard"
+          path="/*"
           element={
-            <ProtectedAdminRoute>
-              <Dashboard adminInfo={adminInfo} onLogout={handleLogout} />
-            </ProtectedAdminRoute>
+            <MainRoutes
+              cart={cart}
+              setCart={setCart}
+              showCartPopup={showCartPopup}
+              setShowCartPopup={setShowCartPopup}
+            />
           }
         />
+
+
+        {/* 관리자 대시보드 경로 */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminLayout adminInfo={adminInfo} onLogout={handleLogout} />
+            </ProtectedAdminRoute>
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="product" element={<ProductManage />} />
+          <Route path="supplies" element={<OrderManage />} />
+          <Route path="sales" element={<SalesManage />} />
+          <Route path="member" element={<MemberManage />} />
+          <Route path="users" element={<UserManage />} />
+        </Route>
       </Routes>
 
+      {/* 로그인&회원가입 팝업 */}
       {showLogin && (
         <LoginPopup
           onClose={() => setShowLogin(false)}
-          onLogin={handleLogin}
-          onLoginSuccess={(user) => {
-            setUserInfo(user);
-            setShowLogin(false);
-          }}
           onSignupClick={() => {
             setShowLogin(false);
             setShowSignup(true);
+          }}
+          onLoginSuccess={(user) => {
+            setUserInfo(user);
+            navigate("/");
           }}
         />
       )}

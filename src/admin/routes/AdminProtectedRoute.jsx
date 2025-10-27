@@ -3,7 +3,12 @@ import { useAdminAuth } from "../../context/AdminAuthContext";
 import AdminLoginPopup from "../popup/AdminLoginPopup";
 
 export default function AdminProtectedRoute({ children }) {
-  const { adminInfo  } = useAdminAuth();
+  const { adminInfo } = useAdminAuth();
 
-  return adminInfo  ? children : <AdminLoginPopup />;
+  // 로그인 여부 판단
+  if (!adminInfo) {
+    return <AdminLoginPopup />;
+  }
+
+  return children;
 }

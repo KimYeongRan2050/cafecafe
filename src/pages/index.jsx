@@ -19,7 +19,8 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
       try {
         const productData = await getProducts();
         const baristaData = await getBaristaProducts();
-        const combined = [...productData, ...baristaData];
+        const combined = [...productData, ...baristaData]
+        .sort((a, b) => Number(a.id) - Number(b.id));
 
         setProducts(combined);
         setLoading(false);
@@ -29,14 +30,13 @@ function Index({ cart, setCart, showCartPopup, setShowCartPopup, onSignupClick }
         setLoading(false);
       }
     }
-
     fetchData();
   }, []);
 
   //커피&라떼 제품 판별
   const isStoreOnly = (product) => {
     const category = (product.imageclass || "").toLowerCase();
-    return category === "coffee" || category === "latte" || category === "grain" || category === "other";
+    return ["coffee", "latte", "grain", "other"].includes(category);
   };
 
   const handleAddToCart = (product) => {
@@ -124,7 +124,7 @@ useEffect(() => {
               <div className="coffee_product">
                 {beanProducts.length > 0 ? (
                   beanProducts.map(p => (
-                    <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                    <ProductCard key={`${p.table}-${p.id}`} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                   ))
                 ) : (
                   <p>원두 상품이 없습니다.</p>
@@ -137,7 +137,7 @@ useEffect(() => {
               <div className="coffee_product">
                   {baristaProducts.length > 0 ? (
                     baristaProducts.map(p => (
-                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                      <ProductCard key={`${p.table}-${p.id}`} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                     ))
                   ) : (
                     <p>바리스타 상품이 없습니다.</p>
@@ -150,7 +150,7 @@ useEffect(() => {
               <div className="coffee_product">
                 {moreProducts.length > 0 ? (
                   moreProducts.map(p => (
-                    <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                    <ProductCard key={`${p.table}-${p.id}`} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                   ))
                 ) : (
                   <p>그외 상품이 없습니다.</p>
@@ -165,7 +165,7 @@ useEffect(() => {
                 <div className="coffee_product">
                   {coffeeProducts.length > 0 ? (
                     coffeeProducts.map(p => (
-                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                      <ProductCard key={`${p.table}-${p.id}`} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                     ))
                   ) : (
                     <p>커피 상품이 없습니다.</p>
@@ -178,7 +178,7 @@ useEffect(() => {
                 <div className="coffee_product">
                   {latteProducts.length > 0 ? (
                     latteProducts.map(p => (
-                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                      <ProductCard key={`${p.table}-${p.id}`} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                     ))
                   ) : (
                     <p>라떼 상품이 없습니다.</p>
@@ -191,7 +191,7 @@ useEffect(() => {
                 <div className="coffee_product">
                   {otherProducts.length > 0 ? (
                     otherProducts.map(p => (
-                      <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
+                      <ProductCard key={`${p.table}-${p.id}`} product={p} onAddToCart={handleAddToCart} onCancel={handleCancelFromCart} />
                     ))
                   ) : (
                     <p>상품이 없습니다.</p>

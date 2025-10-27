@@ -1,10 +1,10 @@
 // src/admin/pages/SalesManage.jsx
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../components/Header";
 import { supabase } from "../../services/supabaseClient";
 
-function SalesManage() {
+function SalesManage({ adminInfo, onLogout }) {
   const [orders, setOrders] = useState([]);
   const [sortType, setSortType] = useState("recent");
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,14 +76,8 @@ function SalesManage() {
 
   return (
     <div className="admin-board">
-      <div className="admin-left">
-        <Sidebar />
-      </div>
-
       <div className="admin-right">
-        <div className="admin-header">
-          <AdminHeader />
-        </div>
+        <div className="admin-header"><Header /></div>
 
         <div className="admin-title">
           <h3>판매 현황</h3>

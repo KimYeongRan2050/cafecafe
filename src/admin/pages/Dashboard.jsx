@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../components/Header";
 import {
   getTodaySummary,
   getSalesChangeRate,
@@ -65,9 +65,9 @@ function Dashboard({ adminInfo, onLogout }) {
 
   return (
     <div className="admin-board">
-      <div className="admin-left"><Sidebar /></div>
+      
       <div className="admin-right">
-        <div className="admin-header"><AdminHeader /></div>
+        <div className="admin-header"><Header /></div>
 
         {/* 상단 대시보드 카드 */}
         <div className="cafe-dashboard">

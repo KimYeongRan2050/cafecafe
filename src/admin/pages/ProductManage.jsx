@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../components/Header";
 import {
   getProducts,
   addProduct,
@@ -11,7 +11,7 @@ import {
 import AddProductPopup from "../popup/AddProductPopup";
 import { getProductImageUrl } from "../../services/productImage";
 
-function ProductManage() {
+function ProductManage({ adminInfo, onLogout }) {
   const [products, setProducts] = useState([]);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
@@ -68,9 +68,8 @@ function ProductManage() {
 
   return(
     <div className="admin-board">
-      <div className="admin-left"><Sidebar /></div>
       <div className="admin-right">
-        <div className="admin-header"><AdminHeader /></div>
+        <div className="admin-header"><Header /></div>
 
         <div className="admin-title">
           <h3>메뉴 관리</h3>

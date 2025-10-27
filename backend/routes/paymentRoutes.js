@@ -1,37 +1,49 @@
-// routes/paymentRoutes.js
 import express from "express";
 import { preparePayment, approvePayment } from "../services/paymentService.js";
 
 const router = express.Router();
 
-// 결제 준비 (프론트에서 orderInfo 전달)
+// 결제 준비
 router.post("/pay", async (req, res) => {
   try {
-    console.log("요청 Body:", req.body);
-    const result = await preparePayment(req.body);
-    res.json(result);
+    const orderInfo = req.body;
+    console.log("카카오페이 결제 요청 수신:", orderInfo);
+
+    const response = await preparePayment(orderInfo);
+    res.json(response);
   } catch (error) {
-    console.error("결제 준비 실패:", error.message);
-    res.status(500).json({ error: error.message });
+    console.error("결제 준비 실패:", error);
+    res.status(500).json({ error: "결제 준비 실패", details: error.message });
   }
 });
 
-// 결제 승인 (카카오페이 success callback)
+// 결제 승인
 router.get("/pay/success", async (req, res) => {
   const { pg_token, order_id } = req.query;
-
   console.log("결제 승인 요청 수신:", order_id, pg_token);
 
   try {
     const result = await approvePayment(order_id, pg_token);
     console.log("결제 승인 성공:", result);
 
-    // 프론트 메인 페이지로 리디렉션
-    res.redirect("http://localhost:5173/?success=1");
+    // redirect 대신 JSON으로 응답 (CORS 문제 방지)
+    res.json({ success: true, message: "결제 승인 완료" });
   } catch (error) {
     console.error("결제 승인 실패:", error);
-    res.status(500).send("결제 승인 실패: " + error.message);
+    res.status(500).json({ error: "결제 승인 실패", details: error.message });
   }
+});
+
+// 결제 취소
+router.get("/pay/cancel", (req, res) => {
+  console.log("결제 취소 요청 수신");
+  res.json({ success: false, message: "결제가 취소되었습니다." });
+});
+
+// 결제 실패
+router.get("/pay/fail", (req, res) => {
+  console.log("결제 실패 요청 수신");
+  res.json({ success: false, message: "결제에 실패했습니다." });
 });
 
 export default router;

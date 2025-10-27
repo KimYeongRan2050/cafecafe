@@ -25,7 +25,7 @@ function Signup({ onClose }) {
       // Supabase Auth 계정 생성
       const { data, error } = await supabase.auth.signUp({
         email: form.email,
-        password: form.password,
+        password: form.password
       });
       if (error) throw error;
       
@@ -38,8 +38,9 @@ function Signup({ onClose }) {
           uuid: user.id, // auth.users.id 참조
           name: form.name,
           email: form.email,
-          phone: form.phone,
-          address: form.address,
+          phone: form.phone || null,
+          password: form.password || null,
+          address: form.address || null,
           created_at: new Date().toISOString(),
         },
       ]);
@@ -71,69 +72,61 @@ function Signup({ onClose }) {
   return (
     <div className="popup-overlay member-popup">
       <div className="popup-content">
-        <h3>회원가입</h3>
-        <form onSubmit={handleSubmit}>
-          <input
-            className="Inbutton"
-            type="text"
-            name="id"
-            placeholder="아이디 (로그인용)"
-            value={form.id}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="Inbutton"
-            type="text"
-            name="name"
-            placeholder="이름"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="Inbutton"
-            type="email"
-            name="email"
-            placeholder="이메일"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="Inbutton"
-            type="password"
-            name="password"
-            placeholder="비밀번호"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="Inbutton"
-            type="text"
-            name="phone"
-            placeholder="휴대전화"
-            value={form.phone}
-            onChange={handleChange}
-          />
-          <input
-            className="Inbutton"
-            type="text"
-            name="address"
-            placeholder="주소"
-            value={form.address}
-            onChange={handleChange}
-          />
+        <div className="popup-content">
+          <h3>회원가입</h3>
+          <form onSubmit={handleSubmit}>
+            <input
+              className="Inbutton"
+              type="text"
+              name="name"
+              placeholder="이름"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="Inbutton"
+              type="email"
+              name="email"
+              placeholder="이메일"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="Inbutton"
+              type="password"
+              name="password"
+              placeholder="비밀번호"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="Inbutton"
+              type="text"
+              name="phone"
+              placeholder="휴대전화"
+              value={form.phone}
+              onChange={handleChange}
+            />
+            <input
+              className="Inbutton"
+              type="text"
+              name="address"
+              placeholder="주소"
+              value={form.address}
+              onChange={handleChange}
+            />
 
-          <button type="submit" disabled={loading}>
-            {loading ? "등록 중..." : "회원가입"}
+            <button type="submit" disabled={loading}>
+              {loading ? "등록 중..." : "회원가입"}
+            </button>
+          </form>
+        </div>
+          <button className="close-btn" onClick={onClose}>
+            닫기
           </button>
-        </form>
-
-        <button className="close-btn" onClick={onClose}>
-          닫기
-        </button>
       </div>
     </div>
   );

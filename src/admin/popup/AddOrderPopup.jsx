@@ -95,7 +95,7 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
     e.preventDefault();
 
     try {
-      // ✅ "1개" 같은 입력값을 숫자로 변환
+      // "1개" 같은 입력값을 숫자로 변환
       const numericStock = parseInt(String(form.stock).replace(/[^0-9]/g, ""), 10);
       const numericPrice = parseInt(String(form.price).replace(/[^0-9]/g, ""), 10);
 
@@ -104,7 +104,7 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
         return;
       }
 
-      // ✅ form에서 최종 데이터 구성
+      // form에서 최종 데이터 구성
       const productData = {
         ...form,
         option: form.option?.trim() || "1kg",
@@ -116,7 +116,7 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
 
       console.log("📦 Supabase로 전송할 데이터:", productData);
 
-      // ✅ 신규 추가 또는 수정
+      // 신규 추가 또는 수정
       let savedProduct;
 
       if (isEdit) {
@@ -128,7 +128,7 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
         }
       }
 
-      // ✅ 완료 후 닫기
+      // 완료 후 닫기
       alert(isEdit ? "제품이 수정되었습니다." : "제품이 추가되었습니다.");
       onSaved();
       onClose();

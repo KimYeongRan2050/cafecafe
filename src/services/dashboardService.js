@@ -2,7 +2,7 @@
 import { supabase } from "./supabaseClient";
 
 /**
- * ✅ 오늘 매출 합계
+ * 오늘 매출 합계
  */
 export async function getTodaySummary() {
   const today = new Date().toISOString().split("T")[0];
@@ -22,7 +22,7 @@ export async function getTodaySummary() {
 }
 
 /**
- * ✅ 어제 매출 합계
+ * 어제 매출 합계
  */
 export async function getYesterdaySummary() {
   const yesterday = new Date();
@@ -44,7 +44,7 @@ export async function getYesterdaySummary() {
 }
 
 /**
- * ✅ 총 주문 수 (전체 orders 행 개수)
+ * 총 주문 수 (전체 orders 행 개수)
  */
 export async function getTotalOrders() {
   const { count, error } = await supabase
@@ -60,7 +60,7 @@ export async function getTotalOrders() {
 }
 
 /**
- * ✅ 인기 용품 TOP 5 (오늘 가장 많이 팔린 제품)
+ * 인기 용품 TOP 5 (오늘 가장 많이 팔린 제품)
  */
 export async function getTopDrinks() {
   const today = new Date().toISOString().split("T")[0];
@@ -93,7 +93,7 @@ export async function getTopDrinks() {
 }
 
 /**
- * ✅ 오늘 대비 어제 매출 변화율
+ * 오늘 대비 어제 매출 변화율
  */
 export async function getSalesChangeRate() {
   const today = await getTodaySummary();

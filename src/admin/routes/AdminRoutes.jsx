@@ -12,12 +12,12 @@ import UserManage from "../pages/UserManage";
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path="dashboard" element={<AdminProtectedRoute><Dashboard /></AdminProtectedRoute>} />
-      <Route path="product" element={<AdminProtectedRoute><ProductManage /></AdminProtectedRoute>} />
-      <Route path="supplies" element={<AdminProtectedRoute><OrderManage /></AdminProtectedRoute>} />
-      <Route path="sales" element={<AdminProtectedRoute><SalesManage /></AdminProtectedRoute>} />
-      <Route path="member" element={<AdminProtectedRoute><MemberManage /></AdminProtectedRoute>} />
-      <Route path="users" element={<AdminProtectedRoute><UserManage /></AdminProtectedRoute>} />
+      <Route path="/admin/dashboard" element={<AdminProtectedRoute><Dashboard /></AdminProtectedRoute>} />
+      <Route path="/admin/product" element={<AdminProtectedRoute><ProductManage /></AdminProtectedRoute>} />
+      <Route path="/admin/supplies" element={<AdminProtectedRoute><OrderManage /></AdminProtectedRoute>} />
+      <Route path="/admin/sales" element={<AdminProtectedRoute><SalesManage /></AdminProtectedRoute>} />
+      <Route path="/admin/member" element={<AdminProtectedRoute><MemberManage /></AdminProtectedRoute>} />
+      <Route path="/admin/users" element={<AdminProtectedRoute><UserManage /></AdminProtectedRoute>} />
     </Routes>
   );
 }

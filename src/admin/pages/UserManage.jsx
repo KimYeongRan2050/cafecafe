@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { getUsers, addUser, removeUser, updateUser,} from "../../services/userService";
 import { getUserImageUrl } from "../../services/userImageService";
 import Sidebar from "../components/Sidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../components/Header";
 import AddUserPopup from "../popup/AddUserPopup";
 
-function UserManage() {
+function UserManage({ adminInfo, onLogout }) {
   const [users, setUsers] = useState([]);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [editUser, setEditUser] = useState(null);
@@ -68,13 +68,8 @@ function UserManage() {
 
   return(
     <div className="admin-board">
-      <div className="admin-left">
-        <Sidebar />
-      </div>
       <div className="admin-right">
-        <div className="admin-header">
-          <AdminHeader />
-        </div>
+        <div className="admin-header"><Header /></div>
 
         <div className="admin-title">
           <h3>직원 관리</h3>

@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAdminAuth } from "../../context/AdminAuthContext";
 import { getUserImageUrl } from "../../services/userImageService";
+import AdminLayout from "../layout/AdminLayout";
 import "../styles/admin.css";
 
 function Sidebar({ adminInfo, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // 로그아웃
   const handleLogout = () => {
     if (onLogout) onLogout();
     navigate("/");
   };
 
+  // 관리자 프로필 이미지 캐싱
   useEffect(() => {
     if (adminInfo?.profile_img) {
       const img = new Image();
@@ -20,6 +22,7 @@ function Sidebar({ adminInfo, onLogout }) {
     }
   }, [adminInfo]);
 
+  // 관리자 사이드바 메뉴 목록
   const menuList = [
     { to: "/admin/dashboard", icon: "bi bi-house-fill", label: "전체 현황" },
     { to: "/admin/product", icon: "bi bi-cup-hot-fill", label: "메뉴 관리" },
@@ -31,6 +34,7 @@ function Sidebar({ adminInfo, onLogout }) {
 
   return (
     <>
+      {/* 관리자 프로필 영역 */}
       <div className="admin-logobox">
         {adminInfo && (
           <div className="admin-info-wrapper">
@@ -51,12 +55,13 @@ function Sidebar({ adminInfo, onLogout }) {
         )}
       </div>
 
+      {/* 메뉴 리스트 */}
       <div className="admin-menu">
         <ul>
-          {menuList.map(menu => (
+          {menuList.map((menu) => (
             <li
               key={menu.to}
-              className={location.pathname.startsWith(menu.to) ? "on" : "off"}
+              className={location.pathname.startsWith(menu.to) ? "on" : ""}
             >
               <Link to={menu.to}>
                 <i className={menu.icon}></i>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { paymentService } from "../services/paymentService";
+import { requestKakaoPay } from "../services/paymentService.js"
 
 function Cart({ cart, setCart, openLoginPopup }) {
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const removeItem = (index) => {
     const updatedCart = cart.filter((_, i) => i !== index);
@@ -15,7 +15,7 @@ function Cart({ cart, setCart, openLoginPopup }) {
   }, 0);
 
   const increaseQuantity = (index) => {
-    setCart(prevCart => {
+    setCart((prevCart) => {
       const updated = [...prevCart];
       const item = updated[index];
       if (item.quantity < item.stock) {
@@ -28,7 +28,7 @@ function Cart({ cart, setCart, openLoginPopup }) {
   };
 
   const decreaseQuantity = (index) => {
-    setCart(prevCart => {
+    setCart((prevCart) => {
       const updated = [...prevCart];
       const item = updated[index];
       if (item.quantity > 1) {
@@ -40,40 +40,40 @@ function Cart({ cart, setCart, openLoginPopup }) {
     });
   };
 
-  const handlePayment = async () => {
-    if (cart.length === 0) return;
+const handlePayment = async () => {
+  if (cart.length === 0) return;
 
-    const customId = localStorage.getItem('custom_id');
-    if (!customId) {
-      setShowLoginPrompt(true);
-      return;
-    }
+  const userEmail = localStorage.getItem("user_email");
+  if (!userEmail) {
+    setShowLoginPopup(true);
+    return;
+  }
 
-    const item = cart[0];
-    if (!item || !item.id || typeof item.id !== "string" || item.id.length < 36) {
-      alert("상품 ID가 유효하지 않습니다.");
-      return;
-    }
-
-    const orderInfo = {
-      productId: item.id,
-      productName: item.name,
-      quantity: item.quantity,
-      price: item.price,
-      table: "barista_products",
-      customId
-    };
-
-    console.log("orderInfo:", orderInfo);
-
-    try {
-      const { redirectUrl } = await paymentService(orderInfo);
-      window.location.href = redirectUrl;
-    } catch (err) {
-      console.error("결제 요청 실패:", err);
-      alert("결제 요청 실패: " + err.message);
-    }
+  const item = cart[0];
+  const orderInfo = {
+    productId: item.id,
+    productName: item.name,
+    quantity: item.quantity,
+    price: item.price,
+    table: "barista_products",
+    userEmail,
   };
+
+  console.log("orderInfo:", orderInfo);
+
+  try {
+    const response = await requestKakaoPay(orderInfo);
+    if (response?.redirectUrl) {
+      window.location.href = response.redirectUrl;
+    } else {
+      alert("카카오페이 결제 URL을 가져오지 못했습니다.");
+    }
+  } catch (err) {
+    console.error("결제 요청 실패:", err);
+    alert("결제 요청 실패: " + err.message);
+  }
+};
+
 
   useEffect(() => {
     const scrollY = window.scrollY;
@@ -84,7 +84,7 @@ function Cart({ cart, setCart, openLoginPopup }) {
       width: 100%;
     `;
     return () => {
-      document.body.style.cssText = '';
+      document.body.style.cssText = "";
       window.scrollTo(0, scrollY);
     };
   }, []);
@@ -99,7 +99,11 @@ function Cart({ cart, setCart, openLoginPopup }) {
           {cart.map((item, index) => (
             <li key={item.id} className="cart-item">
               <div className="cart-img">
-                <img src={item.image || "/images/default.png"} alt={item.name} className="cart-thumb" />
+                <img
+                  src={item.image || "/images/default.png"}
+                  alt={item.name}
+                  className="cart-thumb"
+                />
               </div>
               <div className="cart-txt">
                 <div className="cart-info">
@@ -111,9 +115,13 @@ function Cart({ cart, setCart, openLoginPopup }) {
 
                 <div className="cart-info">
                   <div className="cart-qty-control">
-                    <button className="qty-btn" onClick={() => decreaseQuantity(index)}>-</button>
+                    <button className="qty-btn" onClick={() => decreaseQuantity(index)}>
+                      -
+                    </button>
                     <span className="qty-value">{item.quantity}</span>
-                    <button className="qty-btn" onClick={() => increaseQuantity(index)}>+</button>
+                    <button className="qty-btn" onClick={() => increaseQuantity(index)}>
+                      +
+                    </button>
                   </div>
                   <span className="cart-price">
                     ￦{(item.price * item.quantity).toLocaleString()}
@@ -130,19 +138,23 @@ function Cart({ cart, setCart, openLoginPopup }) {
         <span>￦{total.toLocaleString()}</span>
       </div>
 
-      <button className="close-btn kakaoBtn" onClick={handlePayment}>카카오페이로 결제</button>
+      <button className="close-btn kakaoBtn" onClick={handlePayment}>
+        카카오페이로 결제
+      </button>
 
-      {showLoginPrompt && (
+      {showLoginPopup && (
         <div className="modal">
           <p>로그인 후 결제해주세요.</p>
           <div className="modal-btn">
-            <button onClick={() => setShowLoginPrompt(false)}>취소</button>
-            <button onClick={() => {
-              setShowLoginPrompt(false);
-              if (typeof openLoginPopup === "function") {
-                openLoginPopup(); // 로그인 팝업 열기
-              }
-            }}>
+            <button onClick={() => setShowLoginPopup(false)}>취소</button>
+            <button
+              onClick={() => {
+                setShowLoginPopup(false);
+                if (typeof openLoginPopup === "function") {
+                  openLoginPopup();
+                }
+              }}
+            >
               로그인하기
             </button>
           </div>

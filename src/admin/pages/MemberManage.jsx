@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { data, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../components/Header";
 import { supabase } from "../../services/supabaseClient";
 
-function MemberManage() {
+function MemberManage({ adminInfo, onLogout }) {
   const [members, setMembers] = useState([]);
 
   const fetchMembers = async () => {
@@ -32,13 +32,8 @@ function MemberManage() {
 
   return(
     <div className="admin-board">
-      <div className="admin-left">
-        <Sidebar />
-      </div>
       <div className="admin-right">
-        <div className="admin-header">
-          <AdminHeader />
-        </div>
+        <div className="admin-header"><Header /></div>
 
         <div className="admin-title">
           <h3>회원 관리</h3>

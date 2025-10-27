@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { getProductImageUrl } from "../services/productImage";
 
-export default function ProductCard({ product, onAddToCart, onCancel }) {
+const ProductCard = memo(function ProductCard({ product, onAddToCart, onCancel }) {
   const imageUrl = getProductImageUrl(product.image);
   const imageClass = product.imageClass || product.imageclass || "coffee"
 
@@ -106,4 +106,6 @@ export default function ProductCard({ product, onAddToCart, onCancel }) {
 
     </div>
   );
-}
+});
+
+export default ProductCard;

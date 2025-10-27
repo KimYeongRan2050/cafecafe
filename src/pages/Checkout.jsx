@@ -1,6 +1,6 @@
 import React from "react";
 
-function DashboardCard() {
+function Checkout() {
 
   return(
     <>
@@ -8,4 +8,4 @@ function DashboardCard() {
   )
 };
 
-export default DashboardCard;
+export default Checkout;

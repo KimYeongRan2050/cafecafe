@@ -1,20 +1,28 @@
+// src/routes/MainRoutes.jsx
 import React from "react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Index from '../pages/index.jsx';
-import Cart from '../pages/Cart.jsx';
-import OrderComplete from '../pages/OrderComplete.jsx';
-import PaymentSuccess from '../pages/PaymentSuccess.jsx'; // 결제 성공 페이지 추가
+import { Routes, Route } from "react-router-dom";
+import Index from "../pages/Index";
+import Cart from "../pages/Cart";
+import PaymentSuccess from "../pages/PaymentSuccess";
 
-function MainRoutes({ onLogin, onSignupClick }) {
-
-  return(
+function MainRoutes({ cart, setCart, showCartPopup, setShowCartPopup }) {
+  return (
     <Routes>
-      <Route path="/" element={<Index onSignupClick={onSignupClick} />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/order/complete" element={<OrderComplete />} />
+      <Route
+        path="/"
+        element={
+          <Index
+            cart={cart}
+            setCart={setCart}
+            showCartPopup={showCartPopup}
+            setShowCartPopup={setShowCartPopup}
+          />
+        }
+      />
+      <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
       <Route path="/pay/success" element={<PaymentSuccess />} />
     </Routes>
-  )
-};
+  );
+}
 
 export default MainRoutes;

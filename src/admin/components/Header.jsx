@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
-function AdminHeader() {
+function Header() {
   const navigate = useNavigate();
   const goToHome = () => {
     navigate('/');
@@ -17,4 +17,4 @@ function AdminHeader() {
   )
 };
 
-export default AdminHeader;
+export default Header;
