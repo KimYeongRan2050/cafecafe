@@ -16,14 +16,24 @@ function PaymentSuccess() {
       const productName = params.get("productName");
       const quantity = params.get("quantity");
       const price = params.get("price");
+      const isMock = params.get("mock") === "true";
 
+      // ✅ Mock 결제인 경우 승인 절차 건너뛰기
+      if (isMock) {
+        console.log("🟢 Mock 결제 완료 처리");
+        alert("결제가 완료되었습니다!");
+        navigate("/order-complete");
+        return;
+      }
+
+      // ✅ 실제 결제의 경우에만 필수 정보 검증
       if (!orderId || !pgToken || !tid) {
         alert("필수 결제 정보가 누락되었습니다.");
         return;
       }
 
       try {
-        console.log("결제 승인 요청:", orderId, pgToken, tid);
+        console.log("결제 승인 요청:", { orderId, pgToken, tid });
 
         const response = await axios.get(
           `http://localhost:4000/api/pay/success?order_id=${orderId}&pg_token=${pgToken}&tid=${tid}&userEmail=${userEmail}&userName=${userName}&productName=${productName}&quantity=${quantity}&price=${price}`

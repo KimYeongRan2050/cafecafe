@@ -12,7 +12,6 @@ export async function addMember(memberData) {
       phone,
       role,
       join_date,
-      status: "활동중",
       created_at: new Date().toISOString(),
     },
   ]);

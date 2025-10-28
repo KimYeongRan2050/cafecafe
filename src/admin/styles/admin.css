@@ -143,6 +143,7 @@ p{
 /* 전체 현황 관리 */
 .loading{
   margin: 100px;
+  width: auto;
 }
 .cafe-dashboard{
   margin-top: 30px;
@@ -252,6 +253,15 @@ p{
   flex-direction: column;
   justify-content: center;
 }
+.goto-report{
+  display: flex;
+  justify-content: center;
+}
+.goto-report button{
+  width: auto;
+  padding: 10px 20px;
+}
+
 
 .product-list{
   position: absolute;
