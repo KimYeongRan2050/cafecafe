@@ -3,7 +3,7 @@ import { supabase } from "./supabaseClient";
 // 모든 상품 조회
 export async function getProducts() {
   const { data, error } = await supabase
-    .from('products')
+    .from('drinks')
     .select('*')
     .in('imageclass', ['coffee', 'latte', 'bean', 'barista', 'grain', 'other']);
 
@@ -20,7 +20,7 @@ export async function addProduct(product) {
 
 
   const { data, error } = await supabase
-    .from('products')
+    .from('drinks')
     .insert([{
       ...product,
       imageclass: normalizedImageClass,
@@ -39,7 +39,7 @@ export async function addProduct(product) {
 // 상품 수정
 export async function updateProduct(id, updates) {
   const { data, error } = await supabase
-    .from('products')
+    .from('drinks')
     .update(updates)
     .eq('id', id);
   if (error) {
@@ -52,7 +52,7 @@ export async function updateProduct(id, updates) {
 // 상품 삭제
 export async function deleteProduct(id) {
   const { error } = await supabase
-    .from('products')
+    .from('drinks')
     .delete()
     .eq('id', id);
   if (error) {
@@ -61,10 +61,10 @@ export async function deleteProduct(id) {
   }
 }
 
-// barista_products 전용 CRUD
+// cafe_supplies 전용 CRUD
 export async function getBaristaProducts() {
   const { data, error } = await supabase
-    .from('barista_products')
+    .from('cafe_supplies')
     .select('*')
     .in('imageclass', ['coffee', 'latte', 'bean', 'barista', 'more']);
 
@@ -80,7 +80,7 @@ export async function addBaristaProduct(product) {
   const normalizedImageClass = product.imageclass?.trim() || 'barista';
 
   const { data, error } = await supabase
-    .from('barista_products')
+    .from('cafe_supplies')
     .insert([{
       ...product,
       imageclass: normalizedImageClass, // 저장 시 자동 지정
@@ -95,7 +95,7 @@ export async function addBaristaProduct(product) {
 
 export async function updateBaristaProduct(id, updates) {
   const { data, error } = await supabase
-    .from('barista_products')
+    .from('cafe_supplies')
     .update(updates)
     .eq('id', id);
   if (error) throw error;
@@ -104,7 +104,7 @@ export async function updateBaristaProduct(id, updates) {
 
 export async function deleteBaristaProduct(id) {
   const { error } = await supabase
-    .from('barista_products')
+    .from('cafe_supplies')
     .delete()
     .eq('id', id);
   if (error) throw error;
@@ -113,8 +113,8 @@ export async function deleteBaristaProduct(id) {
 //재고 부족 추가
 export async function getAllLowStockItems() {
   const [menuRes, baristaRes] = await Promise.all([
-    supabase.from('products').select('id, name, stock').lt('stock', 10),
-    supabase.from('barista_products').select('id, name, stock').lt('stock', 10)
+    supabase.from('drinks').select('id, name, stock').lt('stock', 10),
+    supabase.from('cafe_supplies').select('id, name, stock').lt('stock', 10)
   ]);
 
   if (menuRes.error || baristaRes.error) {
@@ -133,7 +133,7 @@ export async function getAllLowStockItems() {
 // 단일 상품 조회 (products 테이블)
 export async function getProductById(id) {
   const { data, error } = await supabase
-    .from("products")
+    .from("drinks")
     .select("*")
     .eq("id", id)
     .single();
@@ -146,10 +146,10 @@ export async function getProductById(id) {
   return data;
 }
 
-// 단일 바리스타 상품 조회 (barista_products 테이블)
+// 단일 바리스타 상품 조회 (cafe_supplies 테이블)
 export async function getBaristaProductById(id) {
   const { data, error } = await supabase
-    .from("barista_products")
+    .from("cafe_supplies")
     .select("*")
     .eq("id", id)
     .single();

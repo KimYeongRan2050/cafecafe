@@ -11,7 +11,7 @@ export async function AdminSignup({ name, password, email }) {
     throw new Error("회원가입 실패: " + authError.message);
   }
 
-  const { error: insertError } = await supabase.from("member").insert({
+  const { error: insertError } = await supabase.from("members").insert({ //member ->members변경
     id: authData.user.id,
     email,
     password, // 실제 운영에서는 bcrypt로 해시 처리

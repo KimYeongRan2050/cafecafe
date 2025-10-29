@@ -35,14 +35,14 @@ function Cart({ cart, setCart, openLoginPopup }) {
     });
   };
 
-  // ✅ 결제 처리
+  // 결제 처리
   const handlePayment = async () => {
     if (cart.length === 0) {
       alert("장바구니가 비어 있습니다.");
       return;
     }
 
-    // ✅ 로그인 여부 확인
+    // 로그인 여부 확인
     const userName = localStorage.getItem("user_name");
     const userEmail = localStorage.getItem("user_email");
     const userPhone = localStorage.getItem("user_phone");
@@ -53,7 +53,7 @@ function Cart({ cart, setCart, openLoginPopup }) {
       return;
     }
 
-    // ✅ 결제 데이터 구성
+    // 결제 데이터 구성
     const totalAmount = cart.reduce(
       (sum, item) => sum + item.price * (item.quantity || 1),
       0
@@ -173,7 +173,7 @@ function Cart({ cart, setCart, openLoginPopup }) {
         </>
       )}
 
-      {/* ✅ 로그인 안내 모달 */}
+      {/* 로그인 안내 모달 */}
       {showLoginModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -184,7 +184,7 @@ function Cart({ cart, setCart, openLoginPopup }) {
                 onClick={() => {
                   setShowLoginModal(false);
                   if (typeof openLoginPopup === "function") {
-                    openLoginPopup(); // ✅ Header에서 전달된 로그인 팝업 실행
+                    openLoginPopup(); // Header에서 전달된 로그인 팝업 실행
                   }
                 }}
               >

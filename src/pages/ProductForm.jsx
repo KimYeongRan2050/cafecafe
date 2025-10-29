@@ -24,7 +24,7 @@ export default function ProductForm() {
     e.preventDefault();
 
     const { data: insertedProduct, error: insertError } = await supabase
-      .from("products")
+      .from("drinks")
       .insert([
         {
           name: productData.name,

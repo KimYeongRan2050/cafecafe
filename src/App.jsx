@@ -1,11 +1,10 @@
 // src/App.jsx
 import React, { useState, useEffect } from "react";
-import { 
-  BrowserRouter as Router, 
-  Routes, 
-  Route, 
-  useLocation, 
-  useNavigate 
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 import Header from "./components/Header";
 import LoginPopup from "./pages/LoginPopup";
@@ -20,26 +19,24 @@ import MemberManage from "./admin/pages/MemberManage";
 import UserManage from "./admin/pages/UserManage";
 import MainRoutes from "./routes/MainRoutes";
 import AdminLoginPopup from "./admin/popup/AdminLoginPopup";
+import PaymentSuccess from "./pages/PaymentSuccess"; // 결제완료 페이지 import
 import { supabase } from "./services/supabaseClient";
 
 function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [adminInfo, setAdminInfo] = useState(null);
-  const [cart, setCart] = useState([]); // 장바구니 상태
+  const [cart, setCart] = useState([]);
   const [showCartPopup, setShowCartPopup] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
-  const [showAdminLoginPopup, setShowAdminLoginPopup] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  //새로고침 시 관리자 로그인 복원
+  // 새로고침 시 관리자 로그인 복원
   useEffect(() => {
     const storedAdmin = localStorage.getItem("adminInfo");
-    if (storedAdmin) {
-      setAdminInfo(JSON.parse(storedAdmin));
-    }
+    if (storedAdmin) setAdminInfo(JSON.parse(storedAdmin));
   }, []);
 
   // 로그인
@@ -50,11 +47,11 @@ function App() {
     });
     if (error) {
       alert("로그인 실패: " + error.message);
-      return null;
+      return;
     }
 
     const user = data.user;
-    if (!user) return null;
+    if (!user) return;
 
     const { data: member } = await supabase
       .from("members")
@@ -84,13 +81,9 @@ function App() {
   // 관리자 보호 라우트
   const ProtectedAdminRoute = ({ children }) => {
     if (!adminInfo) {
-      // 관리자 로그인이 안 된 경우 팝업 표시
       return (
         <AdminLoginPopup
-          onClose={() => {
-            setShowAdminLoginPopup(false);
-            navigate("/");
-          }}
+          onClose={() => navigate("/")}
           onLoginSuccess={(admin) => {
             setAdminInfo(admin);
             navigate("/admin/dashboard");
@@ -120,9 +113,15 @@ function App() {
     restoreSession();
   }, []);
 
+  // 특정 페이지(Header 숨기기)
+  const hideHeaderPaths = ["/admin", "/order-complete", "/pay/success"];
+  const shouldHideHeader = hideHeaderPaths.some((path) =>
+    location.pathname.startsWith(path)
+  );
+
   return (
     <>
-      {!location.pathname.startsWith("/admin") && (
+      {!shouldHideHeader && (
         <Header
           cart={cart}
           setCart={setCart}
@@ -137,7 +136,7 @@ function App() {
       )}
 
       <Routes>
-        {/* cart, setCart 전달 */}
+        {/* 사용자 메인 라우트 */}
         <Route
           path="/*"
           element={
@@ -150,8 +149,10 @@ function App() {
           }
         />
 
+        {/* 결제 완료 페이지 (Header 없이 팝업 + 자동이동) */}
+        <Route path="/order-complete" element={<PaymentSuccess />} />
 
-        {/* 관리자 대시보드 경로 */}
+        {/* 관리자 영역 */}
         <Route
           path="/admin"
           element={
@@ -170,7 +171,7 @@ function App() {
         </Route>
       </Routes>
 
-      {/* 로그인&회원가입 팝업 */}
+      {/* 로그인 & 회원가입 팝업 */}
       {showLogin && (
         <LoginPopup
           onClose={() => setShowLogin(false)}
@@ -184,7 +185,6 @@ function App() {
           }}
         />
       )}
-
       {showSignup && <Signup onClose={() => setShowSignup(false)} />}
     </>
   );

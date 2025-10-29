@@ -6,7 +6,7 @@ export async function preparePayment(orderInfo) {
 
     const response = await axios.post("http://localhost:4000/api/pay", orderInfo);
 
-    // ✅ 정상 응답 처리
+    // 정상 응답 처리
     if (response.data && response.data.next_redirect_pc_url) {
       console.log("결제 요청 성공:", response.data);
       return response.data;
@@ -16,7 +16,7 @@ export async function preparePayment(orderInfo) {
       return null;
     }
   } catch (error) {
-    // ✅ 실제 오류별로 구분 처리
+    // 실제 오류별로 구분 처리
     if (error.response?.status === 400) {
       alert("필수 결제 정보가 누락되었습니다."); // 서버에서 실제로 보낸 400일 때만
     } else if (error.response?.status === 500) {

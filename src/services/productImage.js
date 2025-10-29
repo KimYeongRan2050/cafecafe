@@ -39,7 +39,7 @@ export const saveProductImagePath = async (productId, imagePath) => {
   }
 
   const { error } = await supabase
-    .from("products")
+    .from("drinks")
     .update({ image: imagePath })
     .eq("id", productId);
 

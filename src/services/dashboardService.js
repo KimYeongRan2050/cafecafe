@@ -1,8 +1,6 @@
 import { supabase } from "./supabaseClient";
 
-/**
- * 오늘 매출 합계 (KST 기준)
- */
+// 오늘 매출 합계 (KST 기준)
 export async function getTodaySummary() {
   const now = new Date();
   const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC → KST 보정
@@ -25,9 +23,7 @@ export async function getTodaySummary() {
   return data.reduce((sum, order) => sum + (order.total_price || 0), 0);
 }
 
-/**
- * 어제 매출 합계 (KST 기준)
- */
+// 어제 매출 합계 (KST 기준)
 export async function getYesterdaySummary() {
   const now = new Date();
   const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
@@ -51,9 +47,7 @@ export async function getYesterdaySummary() {
   return data.reduce((sum, order) => sum + (order.total_price || 0), 0);
 }
 
-/**
- * 총 주문 수 (전체 orders 행 개수)
- */
+// 총 주문 수 (전체 orders 행 개수)
 export async function getTotalOrders() {
   const { count, error } = await supabase
     .from("orders")
@@ -67,9 +61,7 @@ export async function getTotalOrders() {
   return count || 0;
 }
 
-/**
- * 오늘 인기 용품 TOP 5 (KST 기준)
- */
+// 오늘 인기 용품 TOP 5 (KST 기준)
 export async function getTopDrinks() {
   const now = new Date();
   const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
@@ -105,9 +97,7 @@ export async function getTopDrinks() {
     .slice(0, 10);
 }
 
-/**
- * 오늘 대비 어제 매출 변화율 (%)
- */
+// 오늘 대비 어제 매출 변화율 (%)
 export async function getSalesChangeRate() {
   const today = await getTodaySummary();
   const yesterday = await getYesterdaySummary();

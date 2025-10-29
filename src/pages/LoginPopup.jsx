@@ -10,7 +10,7 @@ function LoginPopup({ onClose, onLoginSuccess, onSignupClick }) {
     e.preventDefault();
 
     try {
-      // ✅ pw를 password로 넘기지 말고, 변수명 명확히 지정
+      // pw를 password로 넘기지 말고, 변수명 명확히 지정
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password: pw,
@@ -21,7 +21,7 @@ function LoginPopup({ onClose, onLoginSuccess, onSignupClick }) {
       const user = data.user;
       console.log("Auth 성공:", data);
 
-      // ✅ Supabase members 테이블에서 추가 정보 가져오기
+      // Supabase members 테이블에서 추가 정보 가져오기
       const { data: memberInfo } = await supabase
         .from("members")
         .select("name, email, phone, address")
@@ -29,7 +29,7 @@ function LoginPopup({ onClose, onLoginSuccess, onSignupClick }) {
         .single();
 
       if (memberInfo) {
-        // ✅ 로컬스토리지에 회원 정보 저장
+        // 로컬스토리지에 회원 정보 저장
         localStorage.setItem("user_name", memberInfo.name);
         localStorage.setItem("user_email", memberInfo.email);
         localStorage.setItem("user_phone", memberInfo.phone || ""); // 전화번호 저장
@@ -47,7 +47,7 @@ function LoginPopup({ onClose, onLoginSuccess, onSignupClick }) {
     }
   };
 
-  // ✅ 스크롤 잠금 처리
+  // 스크롤 잠금 처리
   useEffect(() => {
     const scrolly = window.scrollY;
     document.body.style.cssText = `
@@ -65,37 +65,39 @@ function LoginPopup({ onClose, onLoginSuccess, onSignupClick }) {
   return (
     <div className="popup-overlay member-popup">
       <div className="popup-content">
-        <h3>로그인</h3>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="이메일"
-            className="Inbutton"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            className="Inbutton"
-            value={pw}
-            onChange={(e) => setPw(e.target.value)}
-            required
-          />
-          <div className="login-btn">
-            <button type="submit">로그인</button>
-            <button type="button" onClick={onSignupClick}>
-              회원가입
-            </button>
-          </div>
-        </form>
+        <div className="popup-content">
+          <h3>로그인</h3>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="email"
+              placeholder="이메일"
+              className="Inbutton"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="비밀번호"
+              className="Inbutton"
+              value={pw}
+              onChange={(e) => setPw(e.target.value)}
+              required
+            />
+            <div className="login-btn">
+              <button type="submit">로그인</button>
+              <button type="button" onClick={onSignupClick}>
+                회원가입
+              </button>
+            </div>
+          </form>
 
-        {message && (
-          <p style={{ marginTop: "10px", color: message.includes("성공") ? "green" : "crimson" }}>
-            {message}
-          </p>
-        )}
+          {message && (
+            <p style={{ marginTop: "10px", color: message.includes("성공") ? "green" : "crimson" }}>
+              {message}
+            </p>
+          )}
+        </div>
 
         <button className="close-btn" onClick={onClose}>
           닫기

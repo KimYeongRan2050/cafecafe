@@ -158,7 +158,7 @@ function Dashboard({ adminInfo, onLogout }) {
                 ))}
               </ul>
             </div>
-          </div>      
+          </div>
         </div>
       </div>
 
