@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { supabase } from "../../services/supabaseClient";
 
@@ -62,6 +62,23 @@ function AdminLoginPopup({ onClose, onLoginSuccess }) {
       window.location.href = "/admin/dashboard";
     }, 1000);
   };
+
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${scrollY}px;
+      overflow-y: scroll;
+      width: 100%;
+    `;
+    return () => {
+      document.body.style.cssText = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
+
+
 
   return (
     <div className="popup-overlay">

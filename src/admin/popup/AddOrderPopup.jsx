@@ -141,143 +141,145 @@ function AddOrderPopup({ onClose, onSaved, isEdit = false, product }) {
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        <h3>{isEdit ? "바리스타 용품 수정" : "바리스타 용품 추가"}</h3>
-        <form onSubmit={handleSubmit}>
-          {/* 카테고리 */}
-          <div className="popup-product-list">
-            <label>카테고리</label>
-            <p>카테고리</p>
-            <select className="select" name="imageclass" value={form.imageclass} onChange={handleChange}>
-              <option value="bean">원두</option>
-              <option value="barista">커피머신</option>
-              <option value="more">그외 제품</option>
-            </select>
-          </div>
+        <div className="popup-content">
+          <h3>{isEdit ? "바리스타 용품 수정" : "바리스타 용품 추가"}</h3>
+          <form onSubmit={handleSubmit}>
+            {/* 카테고리 */}
+            <div className="popup-product-list">
+              <label>카테고리</label>
+              <p>카테고리</p>
+              <select className="select" name="imageclass" value={form.imageclass} onChange={handleChange}>
+                <option value="bean">원두</option>
+                <option value="barista">커피머신</option>
+                <option value="more">그외 제품</option>
+              </select>
+            </div>
 
-          {/* 제품명 */}
-          <div className="popup-product-list">
-            <p>제품명</p>
-            <input name="name" placeholder="제품 이름" value={form.name} onChange={handleChange} required />
-          </div>
+            {/* 제품명 */}
+            <div className="popup-product-list">
+              <p>제품명</p>
+              <input name="name" placeholder="제품 이름" value={form.name} onChange={handleChange} required />
+            </div>
 
-          {/* 제품 용량 */}
-          <div className="popup-product-list">
-            <p>제품 용량</p>
-            <input type="text" placeholder="예: 200" value={optionValue} 
-              onChange={(e) => setOptionValue(e.target.value.replace(/[^0-9]/g, ""))} />
-          </div>
+            {/* 제품 용량 */}
+            <div className="popup-product-list">
+              <p>제품 용량</p>
+              <input type="text" placeholder="예: 200" value={optionValue} 
+                onChange={(e) => setOptionValue(e.target.value.replace(/[^0-9]/g, ""))} />
+            </div>
 
-          <div className="unit-buttons">
-            {["g", "kg", "ml"].map((unit) => (
-              <button
-                type="button"
-                key={unit}
-                className={optionUnit === unit ? "active" : ""}
-                onClick={() => setOptionUnit(unit)}
-              >
-                {unit}
-              </button>
-            ))}
-          </div>
+            <div className="unit-buttons">
+              {["g", "kg", "ml"].map((unit) => (
+                <button
+                  type="button"
+                  key={unit}
+                  className={optionUnit === unit ? "active" : ""}
+                  onClick={() => setOptionUnit(unit)}
+                >
+                  {unit}
+                </button>
+              ))}
+            </div>
 
-          {/* 판매 단위 */}
-          <div className="popup-product-list">
-            <p>판매 단위</p>
+            {/* 판매 단위 */}
+            <div className="popup-product-list">
+              <p>판매 단위</p>
+                <input
+                  type="text"
+                  placeholder="예: 2"
+                  value={quantityValue}
+                  onChange={(e) => setQuantityValue(e.target.value.replace(/[^0-9]/g, ""))}
+                />
+            </div>
+
+            <div className="unit-buttons">
+              {["개", "세트"].map((unit) => (
+                <button
+                  type="button"
+                  key={unit}
+                  className={quantityUnit === unit ? "active" : ""}
+                  onClick={() => setQuantityUnit(unit)}
+                >
+                  {unit}
+                </button>
+              ))}
+            </div>
+
+            {/* 가격 / 재고 */}
+            <div className="popup-product-list">
+              <p>가격</p>
               <input
-                type="text"
-                placeholder="예: 2"
-                value={quantityValue}
-                onChange={(e) => setQuantityValue(e.target.value.replace(/[^0-9]/g, ""))}
+                name="price"
+                placeholder="가격"
+                value={form.price}
+                onChange={handleChange}
+                required
               />
-          </div>
+            </div>
+            <div className="popup-product-list">
+              <p>재고</p>
+              <input
+                name="stock"
+                placeholder="재고"
+                value={form.stock}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div className="unit-buttons">
-            {["개", "세트"].map((unit) => (
-              <button
-                type="button"
-                key={unit}
-                className={quantityUnit === unit ? "active" : ""}
-                onClick={() => setQuantityUnit(unit)}
-              >
-                {unit}
-              </button>
-            ))}
-          </div>
+            {/* 설명 */}
+            <div className="popup-product-list">
+              <p>설명</p>
+              <textarea
+                name="description"
+                placeholder="설명"
+                value={form.description}
+                onChange={handleChange}
+              />
+            </div>
 
-          {/* 가격 / 재고 */}
-          <div className="popup-product-list">
-            <p>가격</p>
-            <input
-              name="price"
-              placeholder="가격"
-              value={form.price}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="popup-product-list">
-            <p>재고</p>
-            <input
-              name="stock"
-              placeholder="재고"
-              value={form.stock}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            {/* 별점 */}
+            <label>별점</label>
+            <div className="rating-select">
+              {[1, 2, 3, 4, 5].map((num) => (
+                <span
+                  key={num}
+                  className={`fa fa-star ${form.rating >= num ? "checked" : ""}`}
+                  onClick={() => setForm((prev) => ({ ...prev, rating: num }))}
+                  style={{ cursor: "pointer" }}
+                ></span>
+              ))}
+            </div>
 
-          {/* 설명 */}
-          <div className="popup-product-list">
-            <p>설명</p>
-            <textarea
-              name="description"
-              placeholder="설명"
-              value={form.description}
-              onChange={handleChange}
-            />
-          </div>
+            {/* 토글 버튼 */}
+            <div className="menu-btn toggle-buttons">
+              {["is_best", "is_sale", "is_new"].map((field) => (
+                <button
+                  key={field}
+                  type="button"
+                  className={form[field] ? "active" : ""}
+                  onClick={() => toggleBoolean(field)}
+                >
+                  {field.replace("is_", "").toUpperCase()}
+                </button>
+              ))}
+            </div>
 
-          {/* 별점 */}
-          <label>별점</label>
-          <div className="rating-select">
-            {[1, 2, 3, 4, 5].map((num) => (
-              <span
-                key={num}
-                className={`fa fa-star ${form.rating >= num ? "checked" : ""}`}
-                onClick={() => setForm((prev) => ({ ...prev, rating: num }))}
-                style={{ cursor: "pointer" }}
-              ></span>
-            ))}
-          </div>
-
-          {/* 토글 버튼 */}
-          <div className="menu-btn toggle-buttons">
-            {["is_best", "is_sale", "is_new"].map((field) => (
-              <button
-                key={field}
-                type="button"
-                className={form[field] ? "active" : ""}
-                onClick={() => toggleBoolean(field)}
-              >
-                {field.replace("is_", "").toUpperCase()}
-              </button>
-            ))}
-          </div>
-
-          {/* 이미지 업로더 */}
-          {productId ? (
-            <ImageUploader
-              productId={productId}
-              onImageSaved={handleImageSaved}
-              initialImage={form.image}
-            />
-          ) : (
-            <p style={{ color: "gray" }}>제품 등록 후 이미지를 업로드할 수 있습니다.</p>
-          )}
+            {/* 이미지 업로더 */}
+            {productId ? (
+              <ImageUploader
+                productId={productId}
+                onImageSaved={handleImageSaved}
+                initialImage={form.image}
+              />
+            ) : (
+              <p style={{ color: "gray" }}>제품 등록 후 이미지를 업로드할 수 있습니다.</p>
+            )}
 
           <button type="submit">{isEdit ? "수정" : "추가"}</button>
         </form>
-        <button onClick={onClose}>닫기</button>
+        </div>
+        <button className="close-btn" onClick={onClose}>닫기</button>
       </div>
     </div>
   );

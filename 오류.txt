@@ -1,0 +1,5 @@
+http://localhost:5173/pay/success?mock=true
+
+
+http://localhost:5173/order-complete
+필수 결제 정보가 누락되었습니다.

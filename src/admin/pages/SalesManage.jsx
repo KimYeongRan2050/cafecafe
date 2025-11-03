@@ -146,14 +146,14 @@ function SalesManage() {
                     displayedOrders.map((order, index) => (
                       <tr key={order.id}>
                         <td>{startIndex + index + 1}</td>
-                        <td>{order.order_id}</td>
+                        <td>{order.order_number}</td>
                         <td>{order.product_name}</td>
                         <td>{order.quantity}</td>
                         <td>₩{order.price?.toLocaleString()}</td>
                         <td>₩{order.total_price?.toLocaleString()}</td>
-                        <td>{order.name || "-"}</td>
+                        <td>{order.user_name || "-"}</td>
                         <td>{formatDate(order.created_at)}</td>
-                        <td>{order.custom_id}</td>
+                        <td>{order.user_email}</td>
                       </tr>
                     ))
                   ) : (

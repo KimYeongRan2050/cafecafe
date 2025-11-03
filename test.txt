@@ -1,0 +1,35 @@
+torani-vanilla-syrup
+
+
+앱 키
+앱 키는 API 호출 시 앱 인증을 위해 사용됩니다. 플랫폼에 따라 사용해야 하는 앱 키가 다릅니다.
+
+네이티브 앱 키
+4bb1b618ebffe1441d9230a740b5c49a
+
+REST API 키
+b4998d80a0dcdaf9c63a94e69e83ef7f
+
+JavaScript 키
+c61921f957e397c21dc0d9bb129e77f7
+
+어드민 키
+ec546a0a7618c384002fd26cadc01ad2
+
+supabase콘솔에 
+barista_products테이블 id (uuid), name(text), description, price, image, created_at, is_best, is_sale, is_new, imageclass, stock, rating, option, quantity 컬럼으로 
+barista_products테이블에 상품이 있고 
+상품결제를 카카오페이로 진행할때 
+barista_products테이블 stock 수량이 차감되어 orders테이블에 표시되게 하려고 합니다.
+현재 orders테이블에 id (uuid), product_id (uuid), product_name, quantity, price, table, custom_id, total_price, created_at, status, user_id, order_id, tid 컬럼이 있는데 
+정확한 전체코드로 수정사항 보여줘
+
+ 
+
+
+
+<img src={item.image || "/images/default.png"} alt={item.name} className="cart-thumb" />
+
+
+
+프로젝트 폴더명과 파일이 이렇게 구현중입니다. 카카오페이결제버튼을 클릭하면 카카오톡으로 결제문자까지 오는데 결제 승인 실패: Cannot access 'newStock' before initialization 
